@@ -1,0 +1,245 @@
+{"response": {
+  "detail": {
+    "accountDetails": [
+  {
+    "accountId":"1",
+    "accountName" : "CVS",
+    "applicationId":"1",
+    "applicationName":"App1",
+    "userId": "1",
+    "userName": "shivani",
+    "roleId":"1",
+    "status":"on"
+  },
+  {
+    "accountId":"1",
+    "accountName" : "CVS",
+    "applicationId":"2",
+    "applicationName":"App2",
+    "userId": "1",
+    "userName": "shivani",
+    "roleId":"1",
+    "status":"off"
+  },
+  {
+    "accountId":"1",
+    "accountName" : "CVS",
+    "applicationId":"3",
+    "applicationName":"App3",
+    "userId": "1",
+    "userName": "shivani",
+    "roleId":"1",
+    "status":"off"
+  },
+  {
+    "accountId":"1",
+    "accountName" : "CVS",
+    "applicationId":"4",
+    "applicationName":"App4",
+    "userId": "1",
+    "userName": "shivani",
+    "roleId":"1",
+    "status":"on"
+  },
+  {
+    "accountId": "2",
+    "accountName": "Morgan Stanley",
+    "applicationId": "5",
+    "applicationName": "App1",
+    "userId": "2",
+    "userName": "test123",
+    "roleId": "2",
+    "status": "on"
+  },
+  {
+    "accountId": "2",
+    "accountName": "Morgan Stanley",
+    "applicationId": "6",
+    "applicationName": "App2",
+    "userId": "2",
+    "userName": "test123",
+    "roleId": "2",
+    "status": "on"
+  },
+  {
+    "accountId": "2",
+    "accountName": "Morgan Stanley",
+    "applicationId": "7",
+    "applicationName": "App3",
+    "userId": "2",
+    "userName": "test123",
+    "roleId": "2",
+    "status": "off"
+  },
+  {
+    "accountId": "2",
+    "accountName": "Morgan Stanley",
+    "applicationId": "7",
+    "applicationName": "App4",
+    "userId": "2",
+    "userName": "test123",
+    "roleId": "2",
+    "status": "off"
+  },
+  {
+    "accountId":"1",
+    "accountName" : "CVS",
+    "applicationId":"1",
+    "applicationName":"App1",
+    "userId": "1",
+    "userName": "shivani",
+    "roleId":"1",
+    "status":""
+  },
+  {
+    "accountId":"1",
+    "accountName" : "CVS",
+    "applicationId":"1",
+    "applicationName":"App1",
+    "userId": "1",
+    "userName": "shivani",
+    "roleId":"1",
+    "status":""
+  },
+  {
+    "accountId":"1",
+    "accountName" : "CVS",
+    "applicationId":"1",
+    "applicationName":"App1",
+    "userId": "1",
+    "userName": "shivani",
+    "roleId":"1",
+    "status":""
+  },
+
+  {
+    "accountId": "2",
+    "accountName": "Morgan Stanley",
+    "applicationId": "2",
+    "applicationName": "App2",
+    "userId": "2",
+    "userName": "test123",
+    "roleId": "2",
+    "status": ""
+  },
+  {
+    "accountId":"2",
+    "accountName" : "Morgan Stanley",
+    "applicationId":"2",
+    "applicationName":"App2",
+    "userId": "3",
+    "userName": "mahak",
+    "roleId":"1",
+    "status":""
+  },
+  {
+    "accountId":"4",
+    "accountName" : "Jeffries",
+    "applicationId":"8",
+    "applicationName":"App1",
+    "userId": "6",
+    "userName": "Rakesh",
+    "roleId":"1",
+    "status":"on"
+  },
+  {
+    "accountId":"4",
+    "accountName" : "Jeffries",
+    "applicationId":"9",
+    "applicationName":"App5",
+    "userId": "6",
+    "userName": "Rakesh",
+    "roleId":"1",
+    "status":"off"
+  },
+  {
+  "accountId":"3",
+  "accountName" : "CACIB",
+  "applicationId":"1",
+  "applicationName":"App1",
+  "userId": "4",
+  "userName": "anumeha",
+  "roleId":"2",
+  "status":""
+  },
+  {
+    "accountId":"1",
+    "accountName" : "Morgan Stanley",
+    "applicationId":"3",
+    "applicationName":"App2",
+    "userId": "5",
+    "userName": "harnath",
+    "roleId":"1",
+    "status":""
+  },
+
+  {
+    "accountId":"4",
+    "accountName" : "Jeffries",
+    "applicationId":"1",
+    "applicationName":"App1",
+    "userId": "6",
+    "userName": "Rakesh",
+    "roleId":"1",
+    "status":""
+  },
+  {
+
+    "accountId":"1",
+    "accountName" : "CVS",
+    "applicationId":"4",
+    "applicationName":"App4",
+    "userId": "7",
+    "userName": "shivani123",
+    "roleId":"2",
+    "status":""
+  },
+  {
+    "accountId":"4",
+    "accountName" : "Jeffries",
+    "applicationId":"2",
+    "applicationName":"App1",
+    "userId": "1",
+    "userName": "shivani",
+    "roleId":"1",
+    "status":""
+  },
+  {
+    "accountId":"1",
+    "accountName" : "CVS",
+    "applicationId":"1",
+    "applicationName":"App1",
+    "userId": "1",
+    "userName": "shivani",
+    "roleId":"1",
+    "status":""
+  },
+  {
+    "accountId":"1",
+    "accountName" : "CVS",
+    "applicationId":"1",
+    "applicationName":"App1",
+    "userId": "1",
+    "userName": "shivani",
+    "roleId":"1",
+    "status":""
+  },
+
+  {
+    "accountId":"3",
+    "accountName" : "CACIB",
+    "applicationId":"4",
+    "applicationName":"App4",
+    "userId": "8",
+    "userName": "harmeet",
+    "roleId":"2",
+    "status":""
+  }],
+    "statusMsg": "success"
+  },
+  "header": {
+    "operationName": "View Account Details",
+    "statusCode": 1,
+    "statusDesc": "success"
+  }
+}}

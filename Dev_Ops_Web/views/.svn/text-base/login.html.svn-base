@@ -1,0 +1,200 @@
+<div ng-controller="LoginCtrl" ng-cloak ng-init="init()">
+     <div data-wrapper-for="headerGrid" class="page-header container-fluid">
+        <div class="row">
+            <div class="col-xs-0 col-sm-6 col-md-6 col-lg-6">
+                 <img src="img/logo.png" alt="">
+            </div>
+            <div class="align-left col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                <!-- bootstrapgridcell -->
+                <span class="font-size24 bold">
+                     DevOps Maturity Assessment Tool
+                </span>
+            </div>
+        </div>
+    </div>
+    <div data-wrapper-for="loginGrid" class="container-login container-fluid">
+        <div class="blue-bg row">
+            <div class=" col-xs-0 col-sm-7 col-md-8 col-lg-8 hidden-xs">
+                <table class="borderless table">
+                    <br/><br/><br/><br/>                    
+                    <tr>
+                        <td class="align-right">
+                            <div>
+                                <div class="text-align-center margin-left5per white">
+                                    <span class="font-size24">
+                                         DevOps Maturity Assessment Tool ver. 0.1
+                                    </span>
+                                    <br/>
+                                    <span class="font-size16">
+                                        This tool is supported on IE 10 and above or Chrome or Firefox
+                                    </span>
+                                    <br/>
+                                    <span class="font-size12">
+                                        The tool uses new technologies that aren't supported by older browsers like IE 6,7
+                                        etc
+                                    </span>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                  
+            </div>
+            <div class="light-grey-bg col-xs-12 col-sm-5 col-md-4 col-lg-4">
+                <form name="myForm">
+                <table class="borderless login-table table">
+                    <tr>
+                        <td>
+                            <!-- bootstraptablecol -->
+                            <span class=" font-size24">
+                                Discover the Awesome.
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <!-- bootstraptablecol -->
+                            <span class=" font-size24">
+                                Log In
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+
+
+
+                            <input type="text" id="empId" value="" name="empId" ng-model="empId" placeholder="User ID" size="25"
+                                class=" input-lg"
+                            ng-keypress="checkLoginUserContent()" ng-class="{'loginErrorBox':invalidMatch,'removeBlueFocus':invalidMatch}" required/>
+                           <br> <span style="color:red;" ng-show="invalidMatch">Invalid User ID or Password, Try Again.</span>
+
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+
+
+                            <input  type="password" id="password" ng-model="password" value="" placeholder="Password"  size="25" name="password"
+                           class=" input-lg" name="" ng-keypress="loginFunction($event)" required>
+
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>                           
+                             <button type="button" ng-click="login()"  class="btn btn-primary btn-block rounded" ng-disabled="myForm.$invalid">Log In</button>
+                        </td>
+                    </tr>
+                    <!-- <tr>
+                        <td>
+                            <div>
+                                <a class=" bold font-size16 a-register">Forgot Password?</a>                               
+                            </div>
+                        </td>
+                    </tr> -->
+                    
+                </table>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div data-wrapper-for="Grid3" class="container-fluid">
+        <div class="row">
+            <div class="padding-top25 padding-left20 padding-bottom25 col-xs-12 col-sm-3 col-md-2 col-lg-2">
+                <div>
+                    <div class="idea-box">
+                        <span class="font-size80 bold lheight-none">                            
+                          50
+                        </span>
+                    </div>
+                    <br/>
+                </div>
+                <!-- bootstrapgridcell -->
+                <span >
+                    Total number of Applications
+                </span>
+            </div>
+            <div class="padding-top25 padding-left20 padding-bottom25 col-xs-12 col-sm-4 col-md-6 col-lg-6">
+                <!-- bootstrapgridcell -->
+                <span class="font-size24">
+                    Genpact DevOps Maturity Assessment Tool ver. 0.1
+                </span>
+                <div>
+                    <span>
+                        DevOps (a clipped compound of development and operations) is a culture, movement or practice that emphasizes the collaboration and communication of both software developers and other information-technology (IT) professionals while automating the process of software delivery and infrastructure changes.
+                    </span>
+                    <br/>
+                    <br/>
+                    <div class="text-align-right">
+                      <!--  <a class=" bold font-size16 a-idea" href="#self">Learn More  ></a>-->
+                    </div>
+                </div>
+            </div>
+            <div class="padding-top25 padding-left20 padding-bottom25 col-xs-12 col-sm-5 col-md-4 col-lg-4">
+                <!-- bootstrapgridcell -->
+                <span class="font-size24">
+                    Assessments
+                </span>
+                <div>
+                    <span>
+                        Submit assesing your applications through Delivery Maturity Assessment Tool.
+                    </span>
+                    <br/>
+                    <br/>
+                    <div class="text-align-right">
+                       <!-- <a class=" bold font-size16 a-idea" href="#self">See All Ideas  ></a>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+     <!--------------********** Pop Up********Start********------------------->
+
+    <div class="modal fade" id="loginError" tabindex="-1"  role="dialog" aria-hidden="true">
+        <div class="modal-dialog ">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <span class="modal-title headingModalTitle">Login Error</span>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <span class="font-size15">Please enter User ID and Password to continue.</span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div>
+                        <button type="button" class="addBtnModal" data-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+     <div class="modal fade" id="passwordError" tabindex="-1"  role="dialog" aria-hidden="true">
+        <div class="modal-dialog ">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <span class="modal-title headingModalTitle">Login Error</span>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <span class="font-size15">Invalid User ID or Password, Try Again.</span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="text-center">
+                        <button type="button" class="addBtnModal width40" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--------------********** Pop Up********Stop********------------------->
+
+</div>

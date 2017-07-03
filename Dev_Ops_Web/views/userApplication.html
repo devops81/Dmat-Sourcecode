@@ -1,0 +1,51 @@
+<style>
+    body{
+        height: auto;
+    }
+    .backButton{
+        float: right;
+        background: none;
+        border: none;
+    }
+    .backButton:active{
+        border: none;
+    }
+</style>
+<div ng-controller="userApplication" ng-cloak ng-init="init()">
+    <h1>Selected User Information</h1>
+    <div header></div>
+    <div id="mainDiv" class="container mainContainer">
+        <div id="notificationSettings" class="well wellClass">
+            <div class=""><h1>User and Application Mapping</h1>
+            <span style="min-width: 1100px; max-width: 1100px; height: auto; margin: 10px auto;"></span>
+                <span style="margin-left:0px;">
+                    <B><h2>Please Provide Criteria's For The mapping</h2></B>
+                </span>
+                  <span style="padding-left: 4px;">
+                      {{uniqueAccountList}}
+                     <select ng-click="fetchApplicationList()" ng-model="uniqueAccountList.accountId" style="width:21%" ng-disabled="disableFields">
+                         <option ng-repeat="account in uniqueAccountList" value="{{account.accountId}}">{{account.accountName}}</option>
+                     </select>
+                </span>
+                <span style="padding-left: 4px;">
+
+                </span>
+                 <span style="padding-left: 4px;;">
+
+                </span>
+                <span style="padding-left: 4px;">
+                      {{uniqueApplicationList}}
+                     <select ng-click="" ng-model="uniqueApplicationList.applicationId" style="width:21%" ng-disabled="disableFields">
+                         <option ng-repeat="application in uniqueApplicationList" value="{{application.applicationId}}">{{application.applicationName}}</option>
+                     </select>
+                </span>
+                 <span style="padding-left: 4px;">
+                      {{uniqueUserList}}
+                     <select ng-click="" ng-model="uniqueUserList.userId" style="width:21%" ng-disabled="disableFields">
+                         <option ng-repeat="user in uniqueUserList" value="{{application.applicationId}}">{{application.applicationName}}</option>
+                     </select>
+                </span>
+                </div>
+            </div>
+        </div>
+    </div>

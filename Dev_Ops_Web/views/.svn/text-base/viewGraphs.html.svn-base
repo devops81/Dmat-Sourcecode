@@ -1,0 +1,18 @@
+<div ng-controller="graphsCtrl" ng-cloak ng-init="init()">
+    <!-- *** HEADER *** -->
+    <div header></div>
+    <div id="mainDiv" class="container mainContainer">
+
+        <div class="headingTitle">
+            Graphical Reports
+        </div>
+
+        <div id="notificationSettings" class="well wellClass">
+            <div class="titleHeading">Business and Enviroment Complexity vs Business Needs vs Delivery Maturity</div>
+            <div id="container" style="min-width: 400px; max-width: 600px; height: 400px; margin: 0 auto"></div>
+        </div>
+
+    </div>
+    <!-- *** FOOTER *** -->
+    <div footer></div>
+</div>

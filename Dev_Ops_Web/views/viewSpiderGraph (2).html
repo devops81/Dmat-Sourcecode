@@ -1,0 +1,63 @@
+<style>
+    body{
+        height: auto;
+    }
+    .backButton{
+        float: right;
+        background: none;
+        border: none;
+    }
+    .backButton:active{
+        border: none;
+    }
+</style>
+<div ng-controller="viewSpiderGraphCtrl" ng-cloak ng-init="init()">
+    <!-- *** HEADER *** -->
+    <div header></div>
+    <div id="mainDiv" class="container mainContainer">
+
+        <div class="headingTitle">Graphical Reports<button class="backButton" ng-disabled="disableFields" ng-click="previousGraph()"><span class="glyphicon glyphicon-menu-left" style="float: right;font-size: 25px;padding-top: 16px;"><p style="margin-top: -4px;float: right">Back</p></span></button></div>
+
+        <div id="notificationSettings" class="well wellClass">
+            <div class="titleHeading">Business Needs Vs Business and Environment Complexity Vs Delivery Maturity</div>
+            <div style="min-width: 1100px; max-width: 1100px; height: auto; margin: 10px auto;">
+                <span style="margin-left:0px;">
+                    <B>Please Provide Criteria's For The Graph : </B>
+                </span>
+                <span style="padding-left: 4px;">
+                    <select ng-click="fetchBusinessUnitsList()" ng-model="userSelected.accountId" style="width:21%" ng-disabled="disableFields">
+                        <option ng-repeat="account in uniqueAccountList" value="{{account.accountId}}">{{account.accountName}}</option>
+                    </select>
+                </span>
+                <span style="padding-left: 4px;;">
+                    <select ng-click="fetchApplicationList()" ng-model="userSelected.businessUnitId" style="width:21%" ng-disabled="disableFields||userSelected.accountId==0">
+                        <option ng-repeat="businessUnit in filteredBusinessList" value="{{businessUnit.businessUnitId}}">{{businessUnit.businessUnitName}}</option>
+                    </select>
+                </span>
+                <span style="padding-left: 4px;">
+                    <select ng-click="" ng-model="userSelected.applicationId" style="width:21%" ng-disabled="disableFields||userSelected.businessUnitId==0||userSelected.accountId==0">
+                        <option ng-repeat="application in filteredApplicationList" value="{{application.applicationId}}">{{application.applicationName}}</option>
+                    </select>
+                </span>
+                <span style="padding-left: 4px;">
+                    <button ng-click="showApplicationView()" class=" btn-primary" ng-disabled="disableFields||userSelected.applicationId==0||userSelected.businessUnitId==0||userSelected.accountId==0">Show Details</button>
+                </span>
+
+            </div>
+            <div id="container" style="min-width: 600px; max-width: 1000px; height: 500px; margin: 0 auto"></div>
+
+            <md-radio-group ng-model="userselection.isUserAdmin" ng-change="setGraphView()" layout="row" style="min-width: 800px; max-width: 800px;padding-top:20px;padding-left: 165px; margin: 0 auto;height:50px;" ng-if="isUserOrAdmin">
+
+                <md-radio-button value="isUser" class="md-primary"><span style="margin-left:0px;cursor: default"><B>User Input Graph</B></span></md-radio-button>
+                <md-radio-button value="isAdmin" class="md-primary"><span style="margin-left:0px;cursor: default;"><B>Adjusted Input Graph</B></span></md-radio-button>
+
+
+            </md-radio-group>
+        </div>
+    </div>
+    <!-- *** FOOTER *** -->
+    <div footer></div>
+
+    <!--<input type="text" id="myText">-->
+
+</div>

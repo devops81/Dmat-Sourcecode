@@ -1,0 +1,186 @@
+<style>
+   body{
+      height: auto;
+   }
+</style>
+<div ng-controller="addApplicationCtrl" ng-cloak ng-init="init()">
+   <!-- *** HEADER *** -->
+   <div header></div>
+   <div id="mainDiv" class="container mainContainer">
+
+      <div class="headingTitle">Application</div>
+
+      <div class="row">
+
+         <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+            <div id="addApplication" class="well wellClass">
+               <div class="titleHeading">Add Application</div>
+               <form name="myForm1">
+               <div class="containerBody">
+                  <div class="padding-bottom15">
+                     <input type="text" ng-model="applicationName" placeholder="Enter Application Name" size="50" name="applicationName"
+                            class="form-control textBox" ng-minlength="5" ng-maxlength="20" ng-pattern="/[A-z0-9-]$/" ng-focus="resetValues()"required/>
+                      <span style="color:red;" ng-if="
+                           myForm1.applicationName.$error.pattern || myForm1.applicationName.$error.minlength ||
+                            myForm1.applicationName.$error.maxlength">Use Appropriate Business Unit Name</span>
+                     <span style="color: red;" ng-if="applicationExist==true">Application Already Exist</span>
+                  </div>
+                  <a href=""  ng-click="searchBusinessUnitPopup()">
+                     <div class="inner-addon right-addon disabledBox" >
+                        <i class="glyphicon glyphicon-search"></i>
+                        <input type="text" ng-model="selectedBusinessUnit.businessUnit.businessUnitName" placeholder="Select Business Unit" onfocus="this.blur()"
+                               readonly="readonly" class="form-control textBox" disabled required>
+                     </div>
+                  </a>
+                    <div>&nbsp;</div>
+				<div class="text-right">
+                  <button ng-click="addApplication()" class="addBtn btn" ng-disabled="myForm1.$invalid">Add</button>
+            	</div>
+               </div>
+                  </form>
+            </div>
+         </div>
+
+         <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+            <div id="applicationList" class="well wellClass">
+               <div class="titleHeading">Application List</div>
+               <div class="containerBody">
+                  <div class="searchBox">
+                     <div class="inner-addon right-addon">
+                        <i class="glyphicon glyphicon-search"></i>
+                        <input type="text" class="form-control textBox" ng-model="searchApplication" placeholder="Search Application">
+                     </div>
+                  </div>
+
+                  <div>
+                     <table class="table table-bordered " cellspacing="0">
+                        <tr class="blue-bg">
+                           <th class="white bold text-center">Application Name</th>
+                            <th class="white bold text-center">Business Unit</th>
+                           <th class="white bold text-align-center">Edit</th>
+                           <th class="white bold text-align-center">Deactivate</th>
+                        </tr>
+                        <tr dir-paginate="application in applicationList  | filter : searchApplication | itemsPerPage:5" pagination-id="Application">
+                           <td class="text-center">
+                              <span>{{application.applicationName}}</span>
+                           </td>
+                            <td class="text-center">
+                              <span>{{application.businessName}}</span>
+                           </td>
+                           <td class="text-align-center">
+                              <span>
+                                 <a class="a-toggle bold" data-toggle="modal"
+                                    ng-click="application.active == false || editApplication(application)" uib-tooltip="Click to Edit" tooltip-placement="right">
+                                    <span class="glyphicon glyphicon-pencil" ng-class="{'deactivateRed' : application.active==false}"></span>
+                                 </a>
+                              </span>
+                           </td>
+                           <td class="text-align-center">
+                              <a class="a-toggle bold" ng-click="editApplicationStatus(application)" uib-tooltip="Click to Deactivate" tooltip-placement="right" ><span class="glyphicon glyphicon-ban-circle" ng-class="{'deactivateRed' : application.active==false}"></span></a>
+                           </td>
+                        </tr>
+                     </table>
+                  </div>
+                  <div class="text-center">
+                     <dir-pagination-controls max-size="5" direction-links="true" boundary-links="true" pagination-id="Application"></dir-pagination-controls>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+
+      <!-- *** EDIT Modal Popup *** -->
+
+      <div class="modal fade" id="editApplication"  tabindex="-1"  role="dialog" aria-hidden="true">
+         <div class="modal-dialog">
+            <div class="modal-content">
+               <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  <span class="modal-title headingModalTitle">Edit Application Name</span>
+               </div>
+               <form name="myForm">
+               <div class="modal-body">
+                  <div class="form-group ">
+                     <div class="editModalFields">Application Name</div>
+                     <input ng-model="editApplicationDetail.applicationName" name="editApplicationDetail"
+                            class="form-control width-100per" ng-minlength="1" ng-maxlength="20" ng-pattern="/[A-z0-9-]$/"
+                            ng-focus="resetValues()" ng-blur="applicationAlreadyExistFunc(editApplicationDetail.applicationName)" required>
+                      <span style="color:red;" ng-if="
+                           myForm.editApplicationDetail.$error.pattern || myForm.editApplicationDetail.$error.minlength ||
+                            myForm.editApplicationDetail.$error.maxlength">Use Appropriate Business Unit Name</span>
+                        <span style="color:red;" ng-if="applicationAlreadyExist==true">Application With This Name Already Exist</span>
+                  </div>
+               </div>
+                <div class="modal-body">
+                    <div class="form-group ">
+                       <select ng-model="editApplicationDetail.businessUnit" class="form-control">
+                          <option ng-repeat="businessUnit in businessUnitList" value="{{businessUnit.businessUnitId}}" >{{businessUnit.businessUnitName}}</option>
+                       </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                  <div class="row">
+                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                        <button ng-click="updateApplication()" class="addBtnModal btn" data-dismiss="modal" ng-disabled="myForm.$invalid">Save</button>
+                     </div>
+                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                        <button type="button" class="addBtnModal" data-dismiss="modal">Cancel</button>
+                     </div>
+                  </div>
+               </div>
+               </form>
+            </div>
+         </div>
+      </div>
+   </div>
+
+   <!-- *** Select Business Unit Pop Up *** -->
+
+   <div class="modal fade" id="selectBusinessUnit" tabindex="-1" role="dialog" aria-hidden="true">
+      <div  class="modal-dialog">
+         <div class="modal-content">
+            <div class="modal-header">
+               <button type="button" class="close" data-dismiss="modal">&times;</button>
+               <span class="modal-title headingModalTitle">Select Business Unit </span>
+            </div>
+            <div class="modal-body">
+               <div class="input-group searchBoxModal padding-bottom15">
+                  <input type="text" class="form-control textBox" ng-model="searchBusinessAccount" size="50" placeholder="Search Business Unit">
+                            <span class="searchFont">
+                                <span class=" glyphicon glyphicon-search searchIcon"></span>
+                            </span>
+
+               </div>
+               <div class="row" dir-paginate="businessUnit in businessUnitList | filter:searchBusinessAccount| itemsPerPage:5" pagination-id="BusinessUnitList">
+                  <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 text-right">
+                     <input type="radio" ng-model="selectedBusinessUnit.businessUnit" value='{"businessUnitId":"{{businessUnit.businessUnitId}}","businessUnitName":"{{businessUnit.businessUnitName}}"}'>
+                  </div>
+                  <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10 whiteSpaceNoWrap">
+                     <label class="modalPopUp1TdStyle font-size16">{{businessUnit.businessUnitName}}</label>
+                  </div>
+               </div>
+               <div class="text-center">
+                  <dir-pagination-controls max-size="5" direction-links="true" boundary-links="true" pagination-id="BusinessUnitList"></dir-pagination-controls>
+               </div>
+            </div>
+
+            <div class="modal-footer">
+               <div class="row">
+                  <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                     <button ng-click="applyBusinessUnit()" class="addBtnModal btn" data-dismiss="modal"
+                            ng-disabled="!selectedBusinessUnit.businessUnit">Apply</button>
+                  </div>
+                  <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                     <button type="button" class="addBtnModal" data-dismiss="modal">Cancel</button>
+                  </div>
+
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <!-- *** Select Account Pop Up *** -->
+
+   <!-- *** FOOTER *** -->
+   <div footer></div>
+</div>

@@ -1,0 +1,125 @@
+package com.devopps.portal.controller;
+
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.Produces;
+
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.devopps.portal.model.ApplicationEntity;
+import com.devopps.portal.model.AuditMappingDetails;
+import com.devopps.portal.model.SaveNotificationRequestBody;
+import com.devopps.portal.model.SaveNotificationServiceResponse;
+import com.devopps.portal.model.SaveProfileServiceResponse;
+import com.devopps.portal.model.UserProfileRequestBody;
+import com.devopps.portal.service.IProfileService;
+import com.devopps.portal.util.Log;
+import com.devopps.portal.util.LogFactory;
+
+
+@RestController
+@RequestMapping("/profile")
+public class ProfileController extends AbstractController{
+	
+	@Autowired
+	@Qualifier("IProfileService")
+	IProfileService profileService;
+	
+	private static final Log LOGGER = LogFactory.getLog(ProfileController.class);
+	
+	/**
+	 * URL : http://localhost:8080/DevOppsServices/profile/saveUpdateProfile/1.0
+	 * 
+	 * <saveUpdateProfile>
+	 *  <saveOrUpdate>1</saveOrUpdate> // 1 for save, anything else for update
+	 *  <employeeId>40021000</employeeId>
+	 *  <name>xyz</name>
+	 *  <roleId>1</roleId>
+	 *  <accountId>1</accountId>
+	 *  <password>ggn@11</password>
+	 *  <isActive>true</isActive>
+	 * </saveUpdateProfile>
+	 * 
+	 * @param request
+	 * @param version
+	 * @param userProfileRequestBody
+	 * @return
+	 */
+	@RequestMapping(value = "/saveUpdateProfile/{version}", method = RequestMethod.POST, produces = "application/xml")
+	public @ResponseBody String saveUserProfile(HttpServletRequest request, @PathVariable Integer version, @RequestBody(required=true) UserProfileRequestBody userProfileRequestBody) {
+		LOGGER.debug("[saveProfile] Service :: Start");
+		SaveProfileServiceResponse response = null;
+		response = profileService.saveUserProfile(userProfileRequestBody);
+		LOGGER.debug("[saveProfile()] :: Ends :: Response -> "+response);
+		String stringXML = marshal(response);
+		String jsonResponse = convertXMlToJson(stringXML);
+		System.out.println(jsonResponse);
+		return jsonResponse;
+	}
+	
+	//URL : http://localhost:8080/DevOppsServices/profile/saveProfile
+	
+	@RequestMapping(value = "/saveProfile", method = RequestMethod.POST,headers="Accept=application/json")
+	/*@Produces({ "text/html" })
+	@Consumes("application/json")*/
+	public @ResponseBody String saveProfile(HttpServletRequest request,  String s) {
+		LOGGER.debug("[saveProfile] Service : Start");
+		//SaveProfileServiceResponse response = null;
+		String response = profileService.saveProfile( s);
+		/*String value=request.getParameter("s");
+		JSONObject jsonResponse = (JSONObject) JSONValue.parse(value);*/
+		LOGGER.debug("[saveProfile()] : Ends : Response -> "+response);
+		
+		//String jsonResponse = convertStringToJson(value);
+		System.out.println(response);
+		return response;
+	}
+	
+	@RequestMapping(value = "/userApplications", method = RequestMethod.GET, produces={"application/json"},
+	        consumes={"application/json"})
+	public @ResponseBody List<ApplicationEntity> getApplications(HttpServletRequest request,String userId) {
+		LOGGER.debug("[userApplications] Service :: Start");
+		List<ApplicationEntity> response = null;
+		response = profileService.getApplications(userId);
+		LOGGER.debug("[userApplications()] :: Ends :: Response -> "+ response);
+		/*String stringXML = marshal(response);
+		return convertXMlToJson(stringXML);*/
+		return response;
+	}
+	
+	/*
+	 * URL :http://localhost:8080/DevOppsServices/profile/saveNotifications/1.0
+	 * 
+	 * <saveUpdateNotifications>
+	 *  <saveOrUpdate>1</saveOrUpdate> // 1 is for Save, anything else is for update
+	 *  <actionId>1</actionId>
+	 *  <isNotifyAssessor></isNotifyAssessor>
+	 *  <isNotifyLeadAssessor></isNotifyLeadAssessor>
+	 * </saveUpdateNotifications>
+	 */
+	@RequestMapping(value = "/saveNotifications/{version}", method = RequestMethod.POST, produces = "application/xml")
+	public @ResponseBody String saveNotifications(HttpServletRequest request, @PathVariable Integer version, @RequestBody(required=true) SaveNotificationRequestBody saveNotificationRequestBody) {
+		LOGGER.debug("[saveNotifications] Service :: Start");
+		SaveNotificationServiceResponse response = null;
+		response = profileService.saveNotifications(saveNotificationRequestBody);
+		LOGGER.debug("[saveNotifications()] :: Ends :: Response -> "+ response);
+		String stringXML = marshal(response);
+		return convertXMlToJson(stringXML);
+	}
+	
+	
+	
+	
+}

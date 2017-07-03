@@ -1,0 +1,244 @@
+<style>
+    body{
+        height: auto;
+    }
+</style>
+<div ng-controller="addAssessmentAreaCtrl" ng-cloak ng-init="init()">
+<!-- *** HEADER *** -->
+<div header></div>
+    
+<div id="mainDiv " class="container mainContainer">
+
+    <div class="headingTitle">
+        Assessment Area
+    </div>
+
+    <div class="row">
+
+        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+            <div id="addAssessment" class="well wellClass">
+                <div class="titleHeading">Add Assessment Area</div>
+                <form name="myForm">
+                <div class="containerBody">
+                    <div class="padding-bottom15">
+                        <input type="text" ng-model="assessmentAreaName" placeholder="Enter Assessment Area Name" size="50" name="assessmentAreaName"
+                               class="form-control textBox" ng-minlength="5" ng-maxlength="20" ng-pattern="/[A-z0-9-]$/" required>
+                        <span style="color:red;" ng-show="
+                           myForm.assessmentAreaName.$error.pattern || myForm.assessmentAreaName.$error.minlength || myForm.assessmentAreaName.$error.maxlength">Use Appropriate Assessment Area Name</span>
+
+                    </div>
+                    <!--<div class="padding-bottom15">
+                        <input type="text" ng-model="weight" placeholder="Enter Weightage" size="50"
+                               class="form-control textBox" only-digits maxlength="3"/>
+                    </div>-->
+                   
+                    <div>&nbsp;</div>
+                    <div class="text-right">
+                        <button ng-click="addAssessmentArea(weight)" class="addBtn btn" ng-disabled="myForm.$invalid">Add</button>
+                    </div>
+                </div>
+                    </form>
+            </div>
+        </div>
+
+        <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+            <div id="assessmentList" class="well wellClass">
+                <div class="titleHeading">Assessment Area List</div>
+                <div class="containerBody">
+                    <div class="searchBox">
+                        <div class="inner-addon right-addon">
+                            <i class="glyphicon glyphicon-search"></i>
+                            <input type="text" class="form-control textBox" ng-model="searchAssessmentAreaName"
+                                   placeholder="Search Assessment Area">
+                        </div>
+                    </div>
+                    <div>
+                        <table class="table  table-bordered " cellspacing="0">
+                            <tr class="blue-bg">
+                                <th class="white bold text-center" width="42%">
+                                    <a href="" ng-click="sortType = 'assessmentAreaName'; sortReverse = !sortReverse" class="white">
+                                        Assessment Area Name
+                                        <span ng-show="sortType == 'assessmentAreaName' && !sortReverse" class="fa fa-caret-down white"></span>
+                                        <span ng-show="sortType == 'assessmentAreaName' && sortReverse" class="fa fa-caret-up white"></span>
+                                    </a>
+                                </th>
+                                <!--<th class="white bold text-center">
+                                    <a href="" ng-click="sortType = 'weightage'; sortReverse = !sortReverse" class="white">
+                                        Weightage (in %)
+                                        <span ng-show="sortType == 'weightage' && !sortReverse" class="fa fa-caret-down white"></span>
+                                        <span ng-show="sortType == 'weightage' && sortReverse" class="fa fa-caret-up white"></span>
+                                    </a>
+                                </th>-->
+                                
+                                <th class="white bold text-center">
+                                    Edit
+                                </th>
+                                <th class="white bold text-center">
+                                    Deactivate
+                                </th>
+                            </tr>
+                            <tr dir-paginate="assessmentArea in assessmentAreaList  | orderBy:sortType:sortReverse  | filter : searchAssessmentAreaName |itemsPerPage:5">
+                                <td class="text-center">
+                                    <span>
+                                        {{assessmentArea.assessmentAreaName}}
+                                    </span>
+                                </td>
+                                <!--<td class="text-center">
+                                    <span>
+                                        {{assessmentArea.weightage}}
+                                    </span>
+                                </td>-->
+                               
+                               
+                                <td class="text-align-center"  >
+                                       <span>
+                        <a class="a-toggle bold"  id="editAssessmentDialogEditible{{$index}}" ng-click=" assessmentArea.active==0||editAssessmentDialog.open(assessmentArea,assessmentArea.assessmentId,assessmentAreaList,assessmentArea.weightage)"  uib-tooltip="Click to Edit" tooltip-placement="right"><span ng-class="{'deactivateRed' : assessmentArea.active==0}" class="glyphicon glyphicon-pencil" ></span>
+                        </a>
+
+                                        </span>
+
+                                </td>
+                                <td class="text-align-center">
+                                    <a class="a-toggle bold" ng-click="editAssessmentAreaStatus(assessmentArea)"  uib-tooltip="Click to Deactivate" tooltip-placement="right"><span class="glyphicon glyphicon-ban-circle" ng-class="{'deactivateRed' : assessmentArea.active==false}"></span>
+                                        </a>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="text-center">
+                        <dir-pagination-controls max-size="5" direction-links="true" boundary-links="true"></dir-pagination-controls>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- *** EDIT Modal Popup *** -->
+    <edit-assessment-dialog model="editAssessmentDialog"></edit-assessment-dialog>
+
+    <!-- *** Delete Modal Popup *** -->
+    <div ng-include="'./views/deleteModalPopup.html'"></div>
+
+    <!--------------**********No Deactivate Pop Up********Start********------------------->
+
+    <div class="modal fade" id="cannotDeactivate"  tabindex="-1"  role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header modalHeaderBorder">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title">ERROR</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <span class="font-size15">This Assessment Area cannot be deleted as it has further Categories linked with it.</span>
+                    </div>
+                </div>
+                <div class="modal-footer modalFooterBorder">
+                    <div>
+                        <span><button class="btn btn-default modal-buttons errorModalButton" data-dismiss="modal">Close</button></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--------------**********No Deactivate Pop Up********Stop********------------------->
+    <!--------------**********No Duplicate Pop Up********Start********------------------->
+
+    <div class="modal fade" id="noDuplicate"  tabindex="-1"  role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-sm ">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header modalHeaderBorder">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title">ERROR</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <span class="font-size15"> The Assement Area already exist in the system. </span>
+                    </div>
+                </div>
+                <div class="modal-footer modalFooterBorder">
+                    <div>
+                        <span><button class="btn btn-default modal-buttons errorModalButton" data-dismiss="modal">Close</button></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+	      <!--MODAL POPUP for Application Search -->    
+<div class="modal fade" id="applicationModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div  class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <span class="modal-title headingModalTitle">Select Application</span>
+      </div>
+      <div class="modal-body">
+          <div class="inner-addon right-addon padding-bottom15">
+              <i class="glyphicon glyphicon-search"></i>
+              <input type="text" class="form-control textBox" ng-model="searchApplication" placeholder="Search Application">
+          </div>
+          <div class="row" ng-repeat="application in applicationList | filter:searchApplication">
+              <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 text-right">
+                  <input type="radio" ng-model="$parent.currentApplication" value="{{application.applicationId}}">
+              </div>
+              <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+                  <label class="modalPopUp1TdStyle font-size16 width-100per">{{application.applicationName}}</label>
+              </div>
+          </div>
+          
+      </div>
+      <div class="modal-footer">
+          <div class="row">
+              <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                  <button ng-click="showSelectedApplication(currentApplication)" class="addBtnModal" data-dismiss="modal">
+                      Apply
+                  </button>
+              </div>
+              <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                  <button type="button" class="addBtnModal" data-dismiss="modal">Cancel</button>
+              </div>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>    
+    
+
+    <!--------------**********No Duplicate Pop Up********Stop********------------------->
+    <!--------------**********totalWeightError Pop Up********Start********------------------->
+
+    <div class="modal fade" id="totalWeightError"  tabindex="-1"  role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <span class="modal-title headingModalTitle">Error</span>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        This Assessment Area cannot be added as the total weight sums out to be greater than 100.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="text-center">
+                        <button type="button" class="addBtnModal width40" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- *** FOOTER *** -->
+<div footer></div>
+</div>

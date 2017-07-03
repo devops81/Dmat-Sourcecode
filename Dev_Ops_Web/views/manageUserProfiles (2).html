@@ -1,0 +1,48 @@
+<style>
+	body{
+		height: auto;
+	}
+</style>
+<div ng-controller="manageUserProfilesCtrl" ng-cloak ng-init="init()">
+     <div header></div>
+     <div id="mainDiv" class="container mainContainer">
+            <div class="headingTitle">Manage User Account</div>
+        <div class="well wellClass">
+                <div class="titleHeading">User Account Settings</div>
+            <div class="containerBody">
+                <div class="searchBox">
+                   <!-- <div class="inner-addon right-addon">
+                        <i class="glyphicon glyphicon-search"></i>
+                        <input type="text" class="form-control textBox" ng-model="" placeholder="Search User">
+                    </div>-->
+                </div>
+	            <div class="containerBody notificationContent">
+	                <div>
+	                    <table class="table table-bordered " cellspacing="0">
+	                        <tr class="blue-bg">
+	                            <th class="white bold text-center">User ID</th>
+								<th class="white bold text-center">User Name</th>
+	                            <th class="white bold text-center">Account Name</th>
+	                            <th class="white bold text-center">Business Need</th>
+	                            <th class="white bold text-center">Business & Env Complexity</th>
+	                            <th class="white bold text-center">Delivery Maturity</th>
+	                        </tr>
+	                        <tr class="text-center" dir-paginate="userData in userProfileDataList  |  filter : userData | unique : 'employeeId'| itemsPerPage:5">
+	                            <td >{{ userData.userId }} </td>
+								<td >{{ userData.name  }} </td>
+	                            <td >{{ userData.accountName }} </td>
+	                            <td><switch  ng-change="updateUserProfile(userProfileDataList,userData,1)"  ng-model="userData.businessNeedActive"      ></switch></td>
+	                            <td><switch  ng-change="updateUserProfile(userProfileDataList,userData,2)"  ng-model="userData.businessEnvNeedActive"   ></switch></td>
+	                            <td><switch  ng-change="updateUserProfile(userProfileDataList,userData,3)"  ng-model="userData.deliveryMaturityActive"  ></switch></td>
+	                        </tr>
+	                    </table>
+	                   <div class="text-center">
+	                        <dir-pagination-controls max-size="5" direction-links="true" boundary-links="true"></dir-pagination-controls>
+	                    </div>
+	                </div>
+	            </div>
+        	</div>
+    	</div>
+	</div>
+    <div footer></div>
+</div>

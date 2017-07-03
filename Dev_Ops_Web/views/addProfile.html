@@ -1,0 +1,548 @@
+<style>
+
+
+</style>
+<div ng-controller="addProfileCtrl" ng-cloak ng-init="init()">
+    <!-- *** HEADER *** -->
+    <div header></div>
+
+    <div id="mainDiv" class="container mainContainer">
+
+        <div class="headingTitle">
+            Profile
+        </div>
+        <form name="myForm">
+        <div id="addProfile" class="well wellClass">
+            <div class="titleHeading">Add Profile</div>
+            <div class="containerBody">
+                <div class="padding-bottom15 row hidden-xs">
+                    <div class="col-lg-3 col-md-3 col-sm-3">
+                        Employee/Guest ID:
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-3">
+                        <input type="text" ng-model="addEmpGuestId" value="" name="addEmpGuestId" placeholder="Enter Employee/Guest ID" size="50" ng-pattern="/^[A-z0-9_-]*$/"
+                               ng-minlength="5" ng-maxlength="20" class="form-control textBox" required>
+
+                        <span ng-if="myForm.addEmpGuestId.$error.required && myForm.addEmpGuestId.$dirty ">Required</span>
+                        <span style="color:red;" ng-if="myForm.addEmpGuestId.$error.pattern">Alpha Numeric</span>
+                            <span style="color:red;" ng-if="myForm.addEmpGuestId.$error.minlength ">
+                                Minimum length should be 5 </span>
+                         <span style="color:red;" ng-if="myForm.addEmpGuestId.$error.maxlength">
+                                 Maximum should be 20</span>
+
+
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-3">
+                        Name:
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-3">
+                        <input type="text" ng-model="addProfileName"  name="addProfileName" value="" placeholder="Enter Name" size="50" ng-pattern="/[A-z]$/"
+                               ng-minlength="5" ng-maxlength="20"   class="form-control textBox" name="" required>
+                        <span ng-if="myForm.addProfileName.$error.required && myForm.addProfileName.$dirty ">Required</span>
+                        <span style="color:red;" ng-if="myForm.addProfileName.$error.pattern">Alphabets Only</span>
+                        <span style="color:red;" ng-if="myForm.addProfileName.$error.minlength ">Minimum length should be 5 </span>
+                        <span style="color:red;" ng-if="myForm.addProfileName.$error.maxlength ">Minimum length should be 20 </span>
+                    </div>
+                </div>
+
+                <div class="padding-bottom15 row hidden-xs">
+                    <div class="col-lg-3 col-md-3 col-sm-3">
+                        Account:
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                        <a href="" data-toggle="tooltip" title="Click To Select Account" data-placement="right">
+                            <div class="inner-addon right-addon disabledBox" ng-click="addAccount()">
+                                <i class="glyphicon glyphicon-search"></i>
+                                <input type="text" ng-model="addProfileAccount" placeholder="Select Account" size="50" ng-minlength="1" name="addProfileAccount"
+                                       class="form-control textBox" disabled required>
+                                <span style="color:red;" ng-if="myForm.addProfileAccount.value.length>0">
+                                Required</span>
+                            </div>
+                        </a>
+
+
+                        
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                        Role:
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+
+                        <a href="" data-toggle="tooltip" title="Click to Select Role" data-placement="right">
+                            <div class="inner-addon right-addon disabledBox" ng-click="addRole()">
+                                <i class="glyphicon glyphicon-search"></i>
+                                <input type="text" ng-model="addProfileRole" placeholder="Select Role" size="50" name="addProfileRole"
+                                       class="form-control textBox" disabled required>
+                            </div>
+                        </a>
+
+                        <!--<span class="popoverTool" ng-click="addRole()">
+                            <a href="" data-toggle="popover" data-trigger="hover" data-content="Click to Search and Select Role">
+                                <label>
+                                    <span class="disabledBox">
+                                        <input type="text" ng-model="addProfileRole" placeholder="Search Role" size="50"
+                                               class="form-control textBox inputWidth" disabled>
+                                        <span class="input-group-btn searchFont">
+                                            <span class=" glyphicon glyphicon-search searchIconProfile"></span>
+                                        </span>
+                                    </span>
+                                </label>
+                            </a>
+                        </span>-->
+                    </div>
+                </div>
+
+                <div class="padding-bottom15 row hidden-xs">
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                        Password:
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                        <div class="eyeTooltip">
+                            <a ng-show="showPassIcon" ng-click="showPassword()" href="" data-toggle="tooltip"
+                               title="Click to Show Password" data-placement="right">
+                                <i class="glyphicon glyphicon-eye-close glyphIconEye cursorPointer"></i>
+                            </a>
+                            <a ng-show="hidePassIcon" ng-click="hidePassword()" href="" data-toggle="tooltip"
+                               title="Click to Hide Password" data-placement="right">
+                                <i class="glyphicon glyphicon-eye-open glyphIconEye cursorPointer"></i>
+                            </a>
+                            <input type="{{typePassword}}" ng-model="addPassword" placeholder="Enter Password" size="50" name="addpassword" ng-pattern="/^[^:\-_]*$/"
+                                   ng-minlength="5" ng-maxlength="20"  class="form-control textBox" required>
+                            <span style="color:red;" ng-if="myForm.addpassword.$error.pattern">Colan, Underscore and Hyphen is invalid </span>
+                            <span style="color:red;" ng-if="myForm.addpassword.$error.required && myForm.addpassword.$dirty">Password is required</span>
+                            <span style="color:red;" ng-if=" myForm.addpassword.$error.minlength || myForm.addpassword.$error.maxlength">Minimum length 5 &amp; Maximum is 20</span>
+                        </div>
+
+
+                        <!--<input type="{{typePassword}}" ng-model="addPassword" placeholder="Enter Password" size="50"
+                               class="form-control textBox inputWidth">
+                        <a tooltips tooltip-template="Click to Show/Hide Password" tooltip-side="right" tooltip-speed="fast">
+                            <span class="input-group-btn searchFont">
+                                <span class=" glyphicon glyphicon-eye-open searchIconProfile cursorPointer" ng-show="showPassIcon"
+                                      ng-click="showPassword()">
+                                </span>
+                                <span class=" glyphicon glyphicon-eye-close searchIconProfile cursorPointer" ng-show="hidePassIcon"
+                                      ng-click="hidePassword()">
+                                </span>
+                            </span>
+                        </a>-->
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                        Re-type Password:
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+
+                        <div class="eyeTooltipReType">
+                            <input type="{{typeNewPassword}}" ng-model="rePassword" placeholder="Re-type Password" name="rePassword" size="50" ng-pattern="/^[^:\-_]*$/"
+                                   ng-minlength="5" ng-maxlength="20" class="form-control textBox" required>
+                            <span style="color:red;" ng-if="myForm.rePassword.$error.pattern">Colan, Underscore and Hyphen is invalid </span>
+                            <span style="color:red;" ng-if="myForm.rePassword.$error.required && myForm.rePassword.$dirty">Password is required</span>
+                            <span style="color:red;" ng-if=" myForm.rePassword.$error.minlength || myForm.rePassword.$error.maxlength">Minimum length 5 &amp; Maximum is 20</span>
+                            <span style="color: red;" ng-if="addPassword!=rePassword&&rePassword!=undefined">Password does not match</span>
+                            <a ng-show="showPaswrdIcon" ng-click="showNewPassword()" href="" data-toggle="tooltip"
+                               title="Click to Show Password" data-placement="right">
+                                <i class="glyphicon glyphicon-eye-close glyphIconEye cursorPointer"></i>
+                            </a>
+                            <a ng-show="hidePaswrdIcon" ng-click="hideNewPassword()" href="" data-toggle="tooltip"
+                               title="Click to Hide Password" data-placement="right">
+                                <i class="glyphicon glyphicon-eye-open glyphIconEye cursorPointer"></i>
+                            </a>
+                        </div>
+
+                        <!--<input type="{{typeNewPassword}}" ng-model="rePassword" placeholder="Re-type Password" size="50"
+                               class="form-control textBox inputWidth">
+                        <a tooltips tooltip-template="Click to Show/Hide Password" tooltip-side="right" tooltip-speed="fast">
+                            <span class="input-group-btn searchFont">
+                                <span class=" glyphicon glyphicon-eye-open searchIconProfile cursorPointer" ng-show="showPaswrdIcon"
+                                      ng-click="showNewPassword()">
+                                </span>
+                                <span class=" glyphicon glyphicon-eye-close searchIconProfile cursorPointer" ng-show="hidePaswrdIcon"
+                                      ng-click="hideNewPassword()">
+                                </span>
+                            </span>
+                        </a>-->
+                    </div>
+                </div>
+
+                <div class="text-center hidden-xs" width="20%" align="center">
+                    <button ng-click="addProfile()" class="addBtnProfile btn btn1" ng-disabled="myForm.$invalid||addPassword!=rePassword">Add</button>
+                </div>
+
+                <div class="padding-bottom15 row visible-xs">
+                    <div class="col-xs-6">
+                        Employee/Guest ID:
+                    </div>
+                    <div class="col-xs-6">
+                        <input type="text" ng-model="addEmpGuestId" value="" placeholder="Enter Guest ID" size="50"
+                               class="form-control textBox">
+                    </div>
+                </div>
+
+                <div class="padding-bottom15 row visible-xs">
+                    <div class="col-xs-6">
+                        Name:
+                    </div>
+                    <div class="col-xs-6">
+                        <input type="text" ng-model="addProfileName" placeholder="Enter Name" size="50"
+                               class="form-control textBox">
+                    </div>
+                </div>
+
+                <div class="padding-bottom15 row visible-xs">
+                    <div class="col-xs-6">
+                        Account:
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="inner-addon right-addon disabledBox" ng-click="addAccount()">
+                            <i class="glyphicon glyphicon-search"></i>
+                            <input type="text" ng-model="addProfileAccount" placeholder="Select Account" size="50"
+                                   class="form-control textBox" disabled>
+                        </div>
+                        <!--<span ng-click="addAccount()">
+                            <span class="disabledBox">
+                                <input type="text" ng-model="addProfileAccount" placeholder="Search Account" size="50"
+                                       class="form-control textBox inputWidth" disabled>
+                                <span class="input-group-btn searchFont">
+                                    <span class=" glyphicon glyphicon-search searchIconProfile"></span>
+                                </span>
+                            </span>
+                        </span>-->
+                    </div>
+                </div>
+                <div class="padding-bottom15 row visible-xs">
+                    <div class="col-xs-6">
+                        Role:
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="inner-addon right-addon disabledBox" ng-click="addRole()">
+                            <i class="glyphicon glyphicon-search"></i>
+                            <input type="text" ng-model="addProfileRole" placeholder="Select Role" size="50"
+                                   class="form-control textBox" disabled>
+                        </div>
+                        <!--<span ng-click="addRole()">
+                            <span class="disabledBox">
+                                <input type="text" ng-model="addProfileRole" placeholder="Search Role" size="50"
+                                       class="form-control textBox inputWidth" disabled>
+                                <span class="input-group-btn searchFont">
+                                    <span class=" glyphicon glyphicon-search searchIconProfile"></span>
+                                </span>
+                            </span>
+                        </span>-->
+                    </div>
+                </div>
+
+                <div class="padding-bottom15 row visible-xs">
+                    <div class="col-xs-6">
+                        Password:
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="eyeTooltip">
+                            <i ng-show="showPassIcon" ng-click="showPassword()" class="glyphicon glyphicon-eye-open glyphIconEye cursorPointer"></i>
+                            <i ng-show="hidePassIcon" ng-click="hidePassword()" class="glyphicon glyphicon-eye-close glyphIconEye cursorPointer"></i>
+                            <input type="{{typePassword}}" ng-model="addPassword" placeholder="Enter Password" size="50"
+                                   class="form-control textBox">
+                        </div>
+
+                        <!--<input type="{{typePassword}}" ng-model="addPassword" placeholder="Enter Password" size="50"
+                               class="form-control textBox inputWidth">
+                        <a tooltips tooltip-template="Click to Show/Hide Password" tooltip-side="right" tooltip-speed="fast">
+                            <span class="input-group-btn searchFont">
+                                <span class=" glyphicon glyphicon-eye-open searchIconProfile cursorPointer" ng-show="showPassIcon"
+                                      ng-click="showPassword()">
+                                </span>
+                                <span class=" glyphicon glyphicon-eye-close searchIconProfile cursorPointer" ng-show="hidePassIcon"
+                                      ng-click="hidePassword()">
+                                </span>
+                            </span>
+                        </a>-->
+                    </div>
+                </div>
+                <div class="padding-bottom15 row visible-xs">
+                    <div class="col-xs-6">
+                        Re-type Password:
+                    </div>
+                    <div class="col-xs-6">
+
+                        <div class="eyeTooltip">
+                            <i ng-show="showPaswrdIcon" ng-click="showNewPassword()" class="glyphicon glyphicon-eye-open glyphIconEye cursorPointer"></i>
+                            <i ng-show="hidePaswrdIcon" ng-click="hideNewPassword()" class="glyphicon glyphicon-eye-close glyphIconEye cursorPointer"></i>
+                            <input type="{{typeNewPassword}}" ng-model="rePassword" placeholder="Re-type Password" size="50"
+                                   class="form-control textBox">
+                        </div>
+
+                        <!--<input type="{{typeNewPassword}}" ng-model="rePassword" placeholder="Re-type Password" size="50"
+                               class="form-control textBox inputWidth">
+                        <a tooltips tooltip-template="Click to Show/Hide Password" tooltip-side="right" tooltip-speed="fast">
+                            <span class="input-group-btn searchFont">
+                                <span class=" glyphicon glyphicon-eye-open searchIconProfile cursorPointer" ng-show="showPaswrdIcon"
+                                      ng-click="showNewPassword()">
+                                </span>
+                                <span class=" glyphicon glyphicon-eye-close searchIconProfile cursorPointer" ng-show="hidePaswrdIcon"
+                                      ng-click="hideNewPassword()">
+                                </span>
+                            </span>
+                        </a>-->
+                    </div>
+                </div>
+
+                <div class="text-center visible-xs">
+                    <button ng-click="addApplication()" class="addBtnProfile">Add</button>
+                </div>
+
+            </div>
+        </div>
+        </form>
+        <div id="profileList" class="well wellClass">
+            <div class="titleHeading">Profile List
+            </div>
+            <div class="containerBody">
+
+                <div class="searchBox">
+                    <div class="inner-addon right-addon">
+                        <i class="glyphicon glyphicon-search"></i>
+                        <input type="text" class="form-control textBox" ng-model="searchProfile" placeholder="Search Profile">
+                    </div>
+                </div>
+                <!--<div class="input-group searchBoxProfile">
+                    <input type="text" class="form-control searchBox" ng-model="searchProfile" placeholder="Search Profile">
+                     <span class="searchFont">
+                        <span class=" glyphicon glyphicon-search searchIcon"></span>
+                     </span>
+                </div>-->
+
+                <div class="tblClass">
+                    <table class="table table-bordered" cellspacing="0">
+                        <tr class="blue-bg">
+                            <th class="white bold width15 text-center">
+                                <a href="" ng-click="sortType = 'employeeId'; sortReverse = !sortReverse" class="white">
+                                    Employee/Guest ID
+                                    <span ng-show="sortType == 'employeeId' && !sortReverse" class="fa fa-caret-down white"></span>
+                                    <span ng-show="sortType == 'employeeId' && sortReverse" class="fa fa-caret-up white"></span>
+                                </a>
+                            </th>
+                            <th class="white bold width15 text-center">
+                                <a href="" ng-click="sortType = 'name'; sortReverse = !sortReverse" class="white">
+                                    Name
+                                    <span ng-show="sortType == 'name' && !sortReverse" class="fa fa-caret-down white"></span>
+                                    <span ng-show="sortType == 'name' && sortReverse" class="fa fa-caret-up white"></span>
+                                </a>
+                            </th>
+                            <th class="white bold width15 text-center">
+
+                                <a href="" ng-click="sortType = 'roleName'; sortReverse = !sortReverse" class="white">
+                                    Role
+                                    <span ng-show="sortType == 'roleName' && !sortReverse" class="fa fa-caret-down white"></span>
+                                    <span ng-show="sortType == 'roleName' && sortReverse" class="fa fa-caret-up white"></span>
+                                </a>
+                            </th>
+                            <th class="white bold width15 text-center">
+
+                                <a href="" ng-click="sortType = 'accountName'; sortReverse = !sortReverse" class="white">
+                                    Account
+                                    <span ng-show="sortType == 'accountName' && !sortReverse" class="fa fa-caret-down white"></span>
+                                    <span ng-show="sortType == 'accountName' && sortReverse" class="fa fa-caret-up white"></span>
+                                </a>
+                            </th>
+                            <th class="white bold text-align-center width15">
+                                Edit
+                            </th>
+                            <th class="white bold text-align-center width15">
+                                Deactivate
+                            </th>
+                        </tr>
+                        <tr dir-paginate="profile in profileList | filter :searchProfile |itemsPerPage:5 |orderBy:sortType:sortReverse" pagination-id="profileList">
+                            <td class="text-center">
+                                <span>{{profile.userId}}</span>
+                            </td>
+                            <td class="text-center">
+                                <span>{{profile.name}}</span>
+                            </td>
+                            <td class="text-center">
+                                <span>{{profile.roleName}}</span>
+                            </td>
+                            <td class="text-center">
+                                <span>{{profile.accountName}}</span>
+                            </td>
+                            <td class="text-align-center">
+                                <span>
+                                    <a class="a-toggle bold" ng-click="profile.activeFlag==0 || editProfileDialog.open(profile,profileList,profile.activeFlag)" uib-tooltip="Click to Edit" tooltip-placement="right">
+                                        <span class="glyphicon glyphicon-pencil cursorPointer " ng-class="{'deactivateRed' : profile.activeFlag==0}"></span>
+                                    </a>
+                                </span>
+                            </td>
+                            <td class="text-align-center">
+                                <a class="a-toggle bold" ng-click="deleteProfile(profile,profileList)" uib-tooltip="Click to Edit" tooltip-placement="right">
+                                    <span class="glyphicon glyphicon-ban-circle cursorPointer" ng-class="{'deactivateRed' : profile.activeFlag==0}"></span>
+                                </a>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="text-center">
+                    <dir-pagination-controls max-size="5" direction-links="true" boundary-links="true" pagination-id="profileList"></dir-pagination-controls>
+                </div>
+            </div>
+        </div>
+
+        <!-- *** EDIT Modal Popup *** -->
+        <edit-person-dialog  model="editCategoryDialog"></edit-person-dialog>
+
+        <!--****************************ADD Role PopUP*********************************---->
+        <div class="modal fade" id="addRoleModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div  class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <span class="modal-title headingModalTitle">Select Role</span>
+                    </div>
+                    <div class="modal-body">
+                        <div class="inner-addon right-addon padding-bottom15">
+                            <i class="glyphicon glyphicon-search"></i>
+                            <input type="text" class="form-control textBox" ng-model="searchRole" placeholder="Search Role">
+
+                        </div>
+
+                        <div class="row" ng-repeat="role in roleList | filter:searchRole">
+                            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 text-right">
+                                <input type="radio" ng-model="$parent.currentrole" value="{{role.roleId}}">
+                            </div>
+                            <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10 whiteSpaceNoWrap">
+                                <label class="modalPopUp1TdStyle font-size16">{{role.role}}</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                <button ng-click="selectedRole(currentrole)" class="addBtnModal btn" data-dismiss="modal"
+                                        ng-disabled="!currentrole" >
+                                    Apply
+                                </button>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                <button type="button" class="addBtnModal" data-dismiss="modal">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <!--****************************Saved User PopUP*********************************---->
+        <div class="modal fade" id="userSavedModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div  class="modal-dialog">
+                <div class="modal-content">
+
+                    <div class="modal-body">
+                    <span align="center" style="" >User Created Successfuly</span>
+
+                    </div>
+                    <div class="modal-footer">
+                        <div class="row">
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4"></div>
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                                <button align="center" type="button" class="addBtnModal" data-dismiss="modal">Ok</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--****************************Update User PopUP*********************************---->
+        <div class="modal fade" id="userUpdateModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div  class="modal-dialog">
+                <div class="modal-content">
+
+                    <div class="modal-body">
+                        <span align="center" style="" >User Detail Updated</span>
+
+                    </div>
+                    <div class="modal-footer">
+                        <div class="row">
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4"></div>
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                                <button align="center" type="button" class="addBtnModal" data-dismiss="modal">Ok</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!--****************************ADD Account PopUP*********************************---->
+        <div class="modal fade" id="addAccountModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div  class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <span class="modal-title headingModalTitle">Select Account</span>
+                    </div>
+                    <div class="modal-body">
+                        <div class="inner-addon right-addon padding-bottom15">
+                            <i class="glyphicon glyphicon-search"></i>
+                            <input type="text" class="form-control textBox" ng-model="searchAccount" placeholder="Search Account">
+                        </div>
+                        <div class="row" dir-paginate="account in accountList | filter:searchAccount | itemsPerPage:5">
+                            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 text-right">
+                                <input type="radio" ng-model="$parent.currentaccount" value="{{account.accountId}}">
+                            </div>
+                            <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+                                <label class="modalPopUp1TdStyle font-size16 width-100per">{{account.account}}</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <dir-pagination-controls max-size="5" direction-links="true" boundary-links="true"></dir-pagination-controls>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                <button ng-click="selectedAccount(currentaccount)" data-dismiss="modal" class="addBtnModal btn"
+                                        ng-disabled="!currentaccount">
+                                    Apply
+                                </button>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                <button type="button" class="addBtnModal" data-dismiss="modal">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!---------*****************Edit Modal Popup *********************----------------------->
+        <edit-profile-dialog model="editProfileDialog"></edit-profile-dialog>
+
+
+        <div class="container">
+            <div class="modal fade" id="editProfile" role="dialog">
+                <div class="modal-dialog width-390">
+                    <div class="modal-content ">
+                        <div class="modal-header modalPopUp1Header ">
+                            <button type="button" class="close" data-dismiss="modal"></button>
+                            <h4 class="modal-title">Edit Profile</h4>
+                        </div>
+                        <div class="modal-body modalPopUp1Body">
+                            <div><h5>Name</h5><br><input type="text" ng-model="profileName"></div>
+                            <div><h5>Role</h5><br><input type="text" ng-model="profileRole"></div>
+                            <div><h5>Account</h5><br><input type="text" ng-model="profileAccount"></div>
+                        </div>
+                        <div class="modal-footer modalPopUpFooter">
+                            <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="saveProfile()">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- *** Delete Modal Popup *** -->
+        <div ng-include="'./views/deleteModalPopup.html'"></div>
+    </div>
+    <!-- *** FOOTER *** -->
+
+    <div footer></div>
+</div>

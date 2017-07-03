@@ -1,0 +1,32 @@
+[
+  {
+    "html":"0 - 3 : Needs Improvement<br>",
+    "style" : {
+      "left" : "750%",
+      "top" : "400%",
+      "fontSize" : "12px",
+      "color" : "#2e6da4",
+      "float" :"left"
+    }
+  },
+  {
+    "html":"3 - 3.5 : Improved<br>",
+    "style" : {
+      "left" : "750%",
+      "top" : "415%",
+      "fontSize" : "12px",
+      "color" : "#2e6da4",
+      "float" :"left"
+    }
+  },
+  {
+    "html":"3.5 - 5 : Huge Impact<br>",
+    "style" : {
+      "left" : "750%",
+      "top" : "430%",
+      "fontSize" : "12px",
+      "color" : "#2e6da4",
+      "float" :"left"
+    }
+  }
+]

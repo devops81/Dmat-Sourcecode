@@ -1,0 +1,311 @@
+<header>
+
+   <!-- Desktop NavBar -->
+   <div class="navbar navbar-default yamm visible-lg visible-md">
+      <div class="navbar-collapse collapse" id="navigationBar">
+         <nav class="navbar navbar-inverse">
+            <div>
+               <ul class="nav navbar-nav">
+                  <li class="dropdown">
+                     <a ui-sref="home" href="javascript: void(0)" ng-click="home()" class="dropdown-toggle" data-toggle="dropdown">Home<b class=""></b></a>
+                  </li>
+                  <li class="dropdown" ng-if="role == 'LA' ">
+                     <a ui-sref="home.user" href="javascript: void(0)" class="dropdown-toggle" data-toggle="dropdown">User Management<b class="caret"></b></a>
+                     <ul class="dropdown-menu userManage">
+                        <!--<li><a href="javascript: void(0)"><span class="black bold">Add Assessor</span></a>
+                        </li>
+                        <li><a href="javascript: void(0)"><span class="black bold">Add Lead Assessor</span></a>
+                        </li>-->
+                        <li><a ui-sref="home.user.profile" href="javascript: void(0)" ng-click="addProfile()"><span class="black bold">Add Profile</span></a>
+                        </li>
+                       <!-- <li><a ui-sref="home.user.reset" href="javascript: void(0)" ng-click="resetPassword()"><span class="black bold">Reset Password</span></a>
+                        </li>-->
+                     </ul>
+                  </li>
+                  <li class="dropdown" ng-if="role == 'A' ">
+                     <a ui-sref="home.app" href="javascript: void(0)"  class="dropdown-toggle" data-toggle="dropdown">Application Assessment<b class="caret"></b></a>
+                     <ul class="dropdown-menu" >
+                        <li><a ui-sref="home.app.assessque" href="javascript: void(0)" ng-click="userAssessmentQuestionnaire()"><span class="black bold">Assessment Questionnaire</span></a>
+                        </li>
+                        <li><a ui-sref="home.app.agilessque" href="javascript: void(0)" ng-click="userAgileQuestionnaire()"><span class="black bold">Agile Health Questionnaire</span></a>
+                        </li>
+                     </ul>
+                  </li>
+                  <!--<li class="dropdown" ng-if="role == 'LA' ">
+                     <a ui-sref="home.appmaster" href="javascript: void(0)" ng-click="addApplication()" class="dropdown-toggle"  data-toggle="dropdown">System 4444 Master<b class=""></b></a>
+                  </li>-->
+                  <li class="dropdown" ng-if="role == 'LA' ">
+                     <a ui-sref="home.app" href="javascript: void(0)" class="dropdown-toggle" data-toggle="dropdown">System Master<b class="caret"></b></a>
+                     <ul class="dropdown-menu" >
+                        <li>
+                           <a ui-sref="home.user.account" href="javascript: void(0)" ng-click="addAccounts()"><span class="black bold"> Manage Accounts </span></a>
+                        </li>
+                        <li>
+                           <a ui-sref="home.user.businessUnit" href="javascript: void(0)" ng-click="addBusinessUnits()"><span class="black bold"> Manage Business Unit </span></a>
+                        </li>
+                        <li>
+                           <a ui-sref="home.user.profile" href="javascript: void(0)" ng-click="addApplication()"><span class="black bold">Manage Applications</span></a>
+                        </li>
+                        <li>
+                           <a ui-sref="home.user.reset" href="javascript: void(0)" ng-click="addAssessmentArea()"><span class="black bold"> Manage Assessment Area </span></a>
+                        </li>
+                        <!--<li>-->
+                           <!--<a ui-sref="home.user.reset" href="javascript: void(0)" ng-click="manageAuditReports()"><span class="black bold"> Manage Audit Reports </span></a>-->
+                        <!--</li>-->
+                         <li>
+                           <a ui-sref="home.user.reset" href="javascript: void(0)" ng-click="manageUserProfiles()"><span class="black bold"> Manage User Profiles </span></a>
+                        </li>
+                        <li>
+                           <a ui-sref="home.user.userApp" href="javascript: void(0)" ng-click="userApplication()"><span class="black bold"> User Application Relation </span></a>
+                        </li>
+                     </ul>
+
+                  </li>
+                  <li class="dropdown use-yamm yamm-fw" id="testQuestion" ng-class="{'open':second}" ng-if="role == 'LA' " ng-click="test(true)">
+                     <a ui-sref="home.ques" href="javascript: void(0)" class="dropdown-toggle" data-toggle="dropdown" >Questionnaire<b class="caret"></b></a>
+                     <ul class="dropdown-menu " >
+                        <li class="dropdown dropdown-submenu" ng-class="{'open':first}" ng-click="test1(true);test2(false);test(false)">
+                           <a ui-sref="home.ques.assessment" href="javascript: void(0)" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+                                 <span class="black bold">
+                                    Assessment Questionnaire
+                                 </span>
+                           </a>
+                           <ul class="dropdown-menu" >
+                              <!--<li><a ui-sref="home.ques.assessment.area" href="javascript: void(0)" ng-click="addAssessmentArea()" ><span class="black bold"> Assessment Area  </span></a></li>-->
+                              <li><a ui-sref="home.ques.assessment.category" href="javascript: void(0)" ng-click="addAssessmentCategory()" ><span class="black bold"> Category</span></a></li>
+                              <li><a ui-sref="home.ques.assessment.subcat" href="javascript: void(0)" ng-click="addAssessmentSubCategory()" ><span class="black bold"> Sub Category</span></a></li>
+                              <li><a ui-sref="home.ques.assessment.questn" href="javascript: void(0)" ng-click="assessmentQuestionnaire()"><span class="black bold">Question</span></a></li>
+                              <li><a ui-sref="home.ques.assessment.questionaire" href="javascript: void(0)" ng-click="viewAssessmentQuestionnaire()"><span class="black bold">Questionnaire</span></a></li>
+                           </ul>
+                        </li>
+                        <li class="dropdown dropdown-submenu" ng-class="{'open':third}" ng-click="test2(true);test1(false);test(false)">
+                           <a ui-sref="home.ques.agile" href="javascript: void(0)" class="dropdown-toggle" data-toggle="dropdown">
+                                 <span class="black bold">
+                                    Agile Health Questionnaire
+                                 </span>
+                           </a>
+                           <ul class="dropdown-menu" >
+                              <!--<li><a href="javascript: void(0)" ng-click="addAssessmentArea()" ><span class="black bold"> Assessment Area  </span></a></li>-->
+                              <li><a href="javascript: void(0)" ng-click="addAgileCategory()" ><span class="black bold"> Category</span></a></li>
+                              <li><a href="javascript: void(0)" ng-click="addAgileSubCategory()" ><span class="black bold"> Sub Category</span></a></li>
+                              <li><a href="javascript: void(0)" ng-click="agileQuestionnaire()"><span class="black bold">Question</span></a></li>
+                              <li><a href="javascript: void(0)" ng-click="viewAgileQuestionnaire()"><span class="black bold">Questionnaire</span></a></li>
+                           </ul>
+                        </li>
+                     </ul>
+                  </li>
+					
+					<li class="dropdown" ng-if="role == 'LA' ">
+                     <a ui-sref="home.app" href="javascript: void(0)" class="dropdown-toggle" data-toggle="dropdown">Audit<b class="caret"></b></a>
+                     <ul class="dropdown-menu" >
+                        <li>
+                           <a ui-sref="home.user.profile" href="javascript: void(0)" ng-click="assessmentReports()"><span class="black bold">Assessment Questionnaire</span></a>
+                        </li>
+                        <li>
+                           <a ui-sref="home.user.reset" href="javascript: void(0)" ng-click="agileFeedback()"><span class="black bold">Agile Questionnaire</span></a>
+                        </li>
+                     </ul>
+					</li>
+					
+					<li class="dropdown" ng-if="role == 'LA' ">
+                     <a ui-sref="home.app" href="javascript: void(0)" class="dropdown-toggle" data-toggle="dropdown">Reports<b class="caret"></b></a>
+                     <ul class="dropdown-menu" >
+					<li>
+                           <a ui-sref="home.user.reset" href="javascript: void(0)" ng-click="viewGraphs()"><span class="black bold">View Graphical Report</span></a>
+                        </li>
+                        <li>
+                           <a ui-sref="home.user.reset" href="javascript: void(0)" ng-click="viewSpiderGraph()"><span class="black bold">View Graphical Report - Spider</span></a>
+                    </li>
+					</ul>
+				   </li>
+					
+               <!--    <li class="dropdown" ng-if="role == 'LA' ">
+                     <a href="javascript: void(0)" class="dropdown-toggle" data-toggle="dropdown">Settings<b class=""></b></a>
+                  </li> -->
+                  <!--<li class="dropdown" ng-if="role == 'LA' ">
+                     <a href="javascript: void(0)" class="dropdown-toggle" data-toggle="dropdown" ng-click="openNotifications()">Notifications<b class=""></b></a>
+                  </li>
+                  <li class="dropdown" ng-if="role == 'LA' ">
+                     <a href="javascript: void(0)" class="dropdown-toggle" data-toggle="dropdown" ng-click="viewFeedbackForm()">Feedback Form<b class=""></b></a>
+                  </li>-->
+                  <!--<li class="dropdown" ng-if="role == 'LA' ">
+                     <a ui-sref="home.app" href="javascript: void(0)" class="dropdown-toggle" data-toggle="dropdown">More<b class="caret"></b></a>
+                     <ul class="dropdown-menu" >
+                        <li>
+                           <a ui-sref="home.user.profile" href="javascript: void(0)" ng-click="openNotifications()"><span class="black bold">Notifications</span></a>
+                        </li>
+                        <li>
+                           <a ui-sref="home.user.reset" href="javascript: void(0)" ng-click="viewFeedbackForm()"><span class="black bold">Feedback Form</span></a>
+                        </li>-->
+                        <!-- <li>
+                           <a ui-sref="home.user.reset" href="javascript: void(0)" ng-click="viewAddRole()"><span class="black bold">Add Role</span></a>
+                        </li>
+                        <li>
+                           <a ui-sref="home.user.reset" href="javascript: void(0)" ng-click="viewAddAccount()"><span class="black bold">Add Account</span></a>
+                        </li>
+                        <li>
+                           <a ui-sref="home.user.reset" href="javascript: void(0)" ng-click="viewGraphs()"><span class="black bold">View Graphical Report</span></a>
+                        </li>
+                        <li>
+                           <a ui-sref="home.user.reset" href="javascript: void(0)" ng-click="viewSpiderGraph()"><span class="black bold">View Graphical Report - Spider</span></a>
+                        </li>
+                        <li>
+                           <a ui-sref="home.user.reset" href="javascript: void(0)" ng-click="viewSummaryChart()"><span class="black bold">Assessment Summary</span></a>
+                        </li> -->
+
+                  </li>
+                  <li class="dropdown pull-right">
+                     <a href="javascript: void(0)" ng-click="logout()" class="dropdown-toggle" data-toggle="dropdown">Logout
+                        <b class=""></b>
+                        <span class="glyphicon glyphicon-log-out"></span>
+                     </a>
+                  </li>
+               </ul>
+            </div>
+         </nav>
+      </div>
+   </div>
+   <!-- Desktop NavBar Ends -->
+
+   <!-- Mobile Devices NavBar -->
+   <div class="navbar-affixed-top  visible-sm visible-xs" data-spy="affix" data-offset-top="200">
+
+      <div class="navbar navbar-default yamm" role="navigation" id="navbar">
+
+         <div class="navbar-header navHeader">
+            <a class="navbar-brand home" href="javascript: void(0)">
+               <!--<img src="img/logo_header.png" alt="Universal logo" class="padding-top13-per hidden-xs hidden-sm">
+               <img src="img/logo-small.png" alt="Universal logo" class="visible-xs visible-sm">-->
+            </a>
+            <div class="navbar-buttons">
+               <button type="button" class="navbar-toggle btn-template-main collapsed btnHamburger" data-toggle="collapse"
+                       data-target="#navigationBarMobile" aria-expanded="false">
+                  <span class="sr-only">Toggle navigation</span>
+                  <i class="fa fa-align-justify glyphHamburger"></i>
+               </button>
+            </div>
+         </div>
+
+         <!--navbar-header-->
+         <div class="navbar-collapse collapse" id="navigationBarMobile">
+            <ul class="nav navbar-nav navbar-right ulClass" ng-class="assessment">
+               <li class="dropdown ">
+                  <a href="javascript: void(0)" ng-click="home()" class="dropdown-toggle" data-toggle="dropdown">Home<b class=""></b></a>
+               </li>
+               <li class="dropdown" ng-if="role == 'LA' ">
+                  <a href="javascript: void(0)"  class="dropdown-toggle" data-toggle="dropdown">User Management<b class="caret"></b></a>
+                  <ul class="dropdown-menu" >
+                     <li><a href="javascript: void(0)" ng-click="addProfile()"><span class="black bold">Add Profile</span></a></li>
+                     <!--<li><a href="javascript: void(0)" ng-click="addApplication()"><span class="black bold">Application Management</span></a></li>-->
+                     <li><a href="javascript: void(0)" ng-click="resetPassword()"><span class="black bold">Reset Password</span></a></li>
+                  </ul>
+               </li>
+               <li class="dropdown" ng-if="role == 'A' ">
+                  <a href="javascript: void(0)"  class="dropdown-toggle" data-toggle="dropdown">Application Assessment<b class="caret"></b></a>
+                  <ul class="dropdown-menu" >
+                     <li><a href="javascript: void(0)" ng-click="userAssessmentQuestionnaire()"><span class="black bold">Assessment Questionnaire</span></a>
+                     </li>
+                     <li><a href="javascript: void(0)" ng-click="userAgileQuestionnaire()"><span class="black bold">Agile Health Questionnaire</span></a>
+                     </li>
+                  </ul>
+               </li>
+               <!--<li class="dropdown">
+                  <a href="javascript: void(0)" ng-if="role == 'LA' "  ng-click="addApplication()" class="dropdown-toggle"  data-toggle="dropdown">System 3333 Master<b class=""></b></a>
+               </li>-->
+               <li class="dropdown" ng-if="role == 'LA' ">
+                  <a ui-sref="home.app" href="javascript: void(0)" class="dropdown-toggle" data-toggle="dropdown">System Master<b class="caret"></b></a>
+                  <ul class="dropdown-menu" >
+                     <li>
+                           <a ui-sref="home.user.businessUnit" href="javascript: void(0)" ng-click="addBusinessUnits()"><span class="black bold">Manage Business Unit</span></a>
+                        </li>
+                     <li>
+                        <a ui-sref="home.user.profile" href="javascript: void(0)" ng-click="addApplication()"><span class="black bold">Manage Application</span></a>
+                     </li>
+                     <li>
+                        <a ui-sref="home.user.reset" href="javascript: void(0)" ng-click="addAssessmentArea()"><span class="black bold">Manage Assessment Area</span></a>
+                     </li>
+                     <li>
+                        <a ui-sref="home.user.reset" href="javascript: void(0)" ng-click="manageAuditReports()"><span class="black bold">Manage Audit Reports</span></a>
+                     </li>
+                      <li>
+                           <a ui-sref="home.user.reset" href="javascript: void(0)" ng-click="manageUserProfiles()"><span class="black bold"> Manage User Profiles </span></a>
+                      </li>
+                  </ul>
+               </li>
+               <li class="dropdown use-yamm yamm-fw" ng-if="role == 'LA' ">
+                  <a href="javascript: void(0)" class="dropdown-toggle" data-toggle="dropdown">Questionnaire<b class="caret"></b></a>
+                  <ul class="dropdown-menu left0 right0" >
+                     <li>
+                        <div class="yamm-content">
+                           <div class="row">
+                              <div class="col-sm-6">
+                                 <h5>Assessment Questionnaire</h5>
+                                 <ul>
+                                    <li><a href="javascript: void(0)" ng-click="addAssessmentArea()" ><span class="black bold"> Assessment Area  </span></a></li>
+                                    <li><a href="javascript: void(0)" ng-click="addAssessmentCategory()" ><span class="black bold"> Category</span></a></li>
+                                    <li><a href="javascript: void(0)" ng-click="addAssessmentSubCategory()" ><span class="black bold"> Sub Category</span></a></li>
+                                    <li><a href="javascript: void(0)" ng-click="assessmentQuestionnaire()"><span class="black bold">Question</span></a></li>
+                                    <li><a href="javascript: void(0)" ng-click="viewAssessmentQuestionnaire()"><span class="black bold">Questionnaire</span></a></li>
+                                 </ul>
+                              </div>
+                              <div class="col-sm-6">
+                                 <h5>Agile Health Questionnaire</h5>
+                                 <ul>
+                                    <li><a href="javascript: void(0)" ng-click="addAssessmentArea()" ><span class="black bold"> Assessment Area  </span></a></li>
+                                    <li><a href="javascript: void(0)" ng-click="addAgileCategory()" ><span class="black bold"> Category</span></a></li>
+                                    <li><a href="javascript: void(0)" ng-click="addAgileSubCategory()" ><span class="black bold"> Sub Category</span></a></li>
+                                    <li><a href="javascript: void(0)" ng-click="agileQuestionnaire()"><span class="black bold">Question</span></a></li>
+                                    <li><a href="javascript: void(0)" ng-click="viewAgileQuestionnaire()"><span class="black bold">Questionnaire</span></a></li>
+                                 </ul>
+                              </div>
+                           </div>
+                        </div>
+                     </li>
+                  </ul>
+               </li>
+               <li class="dropdown" >
+                  <a href="javascript: void(0)" class="dropdown-toggle" data-toggle="dropdown" ng-click="">Reports<b class=""></b></a>
+               </li>
+               <li class="dropdown" ng-if="role == 'LA' ">
+                  <a href="javascript: void(0)" class="dropdown-toggle" data-toggle="dropdown">Settings<b class=""></b></a>
+               </li>
+               <!--<li class="dropdown" ng-if="role == 'LA' ">
+                  <a href="javascript: void(0)" class="dropdown-toggle" data-toggle="dropdown" ng-click="openNotifications()">Notifications<b class=""></b></a>
+               </li>-->
+               <li class="dropdown" ng-if="role == 'LA' ">
+                  <a ui-sref="home.app" href="javascript: void(0)"  class="dropdown-toggle" data-toggle="dropdown">More<b class="caret"></b></a>
+                  <ul class="dropdown-menu" >
+                     <li>
+                        <a ui-sref="home.user.profile" href="javascript: void(0)" ng-click="openNotifications()"><span class="black bold">Notifications</span></a>
+                     </li>
+                     <li>
+                        <a ui-sref="home.user.reset" href="javascript: void(0)" ng-click="viewFeedbackForm()"><span class="black bold">Feedback Form</span></a>
+                     </li>
+                     <li>
+                        <a ui-sref="home.user.reset" href="javascript: void(0)" ng-click="viewAddRole()"><span class="black bold">Add Role</span></a>
+                     </li>
+                     <li>
+                        <a ui-sref="home.user.reset" href="javascript: void(0)" ng-click="viewAddAccount()"><span class="black bold">Add Account</span></a>
+                     </li>
+                     <li>
+                        <a ui-sref="home.user.reset" href="javascript: void(0)" ng-click="viewGraphs()"><span class="black bold">View Graphical Report</span></a>
+                     </li>
+                     <li>
+                        <a ui-sref="home.user.reset" href="javascript: void(0)" ng-click="viewSpiderGraph()"><span class="black bold">View Graphical Report - Spider </span></a>
+                     </li>
+                     <li>
+                        <a ui-sref="home.user.reset" href="javascript: void(0)" ng-click="viewSummaryChart()"><span class="black bold">Assessment Summary</span></a>
+                     </li>
+                  </ul>
+               </li>
+
+               <li class="dropdown">
+                  <a href="javascript: void(0)" ng-click="logout()" class="dropdown-toggle" data-toggle="dropdown">Logout<b class=""></b></a>
+               </li>
+            </ul>
+         </div>
+      </div>
+      <!-- /#navbar -->
+   </div>
+   <!-- Mobile Devices NavBar -->
+</header>

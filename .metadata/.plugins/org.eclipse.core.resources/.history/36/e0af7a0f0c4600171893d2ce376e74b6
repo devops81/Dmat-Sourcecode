@@ -1,0 +1,35 @@
+import java.sql.*;
+public class TestingJdbc {
+	void Test(){
+	try{  
+		Class.forName("com.mysql.jdbc.Driver");  
+		Connection con=DriverManager.getConnection(  
+		"jdbc:mysql://ec2-35-167-167-173.us-west-2.compute.amazonaws.com:3306/DevOpsClone","root","");  
+		System.out.println("Time Before Executing Query---> "+System.currentTimeMillis());
+		Statement stmt=con.createStatement();  
+		ResultSet rs=stmt.executeQuery("select  f.ID, a.questionId, f.application_Id, g.application_Name, b.assessment_Id,"
+			+ " b.assessment_Name , c.category_id, c.category_Name, d.subCategory_Id, d.subCategory_Name, "
+			+ "a.question_description , e.option1Val , e.option2Val, e.option3Val, e.option4Val, e.option5Val,f.score_admin,"
+			+ "f.score_user,f.comments,f.submitted_By,f.report_Id, f.business_Unit_Id,i.business_unit_name, f.account_id, h.account_name "+
+			"from question_master a " + 
+			"LEFT OUTER JOIN assessment_master b ON a.assessment_id = b.assessment_id "+
+			" LEFT OUTER JOIN category_master c ON a.category_id = c.category_id "+
+			" LEFT OUTER JOIN subcategory_master d ON a.subcategory_id = d.subcategory_id "+
+			" LEFT OUTER JOIN question_indicative_values e ON a.questionId = e.questionId "+
+			" LEFT OUTER JOIN question_score f ON a.questionId = f.questionId " +
+			" LEFT OUTER JOIN application_master g ON g.application_id = f.application_id "+
+			" LEFT OUTER JOIN account_master h ON h.account_id = f.account_id "+	
+			" LEFT OUTER JOIN business_unit_master i ON i.business_unit_id = f.business_unit_id ");  
+		while(rs.next())
+			System.out.println("hii");
+		System.out.println("Time After Executing Query---> "+System.currentTimeMillis());  
+		con.close();  
+		}catch(Exception e){ System.out.println(e);}
+	}
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		TestingJdbc obj=new TestingJdbc();
+		obj.Test();
+	}
+
+}

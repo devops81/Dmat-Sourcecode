@@ -1,0 +1,119 @@
+<div ng-controller="viewQuestionnaireCtrl" ng-cloak ng-init="init(1)">
+   <!-- *** HEADER *** -->
+   <div header></div>
+   <div id="mainDiv" class="container mainContainer">
+
+      <div class="headingTitle">
+         Assessment Questionnaire
+      </div>
+
+      <div id="viewQuestonaire" class="well wellClass">
+         <div class="titleHeading">View Questionaire</div>
+         <div class="containerBody">
+
+            <div class="searchBox">
+               <div class="inner-addon right-addon">
+                  <i class="glyphicon glyphicon-search"></i>
+                  <input type="text" class="form-control textBox" ng-model="searchQuestion" placeholder="Search Questionaire">
+               </div>
+            </div>
+            <div class="tblClass">
+               <table class="table  table-bordered " cellspacing="0">
+                  <tr class="blue-bg">
+                     <th class="white bold text-center" >
+                        <a href="" ng-click="sortType = 'questionName'; sortReverse = !sortReverse" class="white">
+                           Question
+                           <span ng-show="sortType == 'questionName' && !sortReverse" class="fa fa-caret-down white"></span>
+                           <span ng-show="sortType == 'questionName' && sortReverse" class="fa fa-caret-up white"></span>
+                        </a>
+                     </th>
+                     <th class="white bold text-center" >
+                        Indicative Values
+                     </th>
+                     <th class="white bold text-center" >
+                        <a href="" ng-click="sortType = 'assessmentArea'; sortReverse = !sortReverse" class="white">
+                           Assessment Area
+                           <span ng-show="sortType == 'assessmentArea' && !sortReverse" class="fa fa-caret-down white"></span>
+                           <span ng-show="sortType == 'assessmentArea' && sortReverse" class="fa fa-caret-up white"></span>
+                        </a>
+                     </th>
+                     <th class="white bold text-center" >
+                        <a href="" ng-click="sortType = 'category'; sortReverse = !sortReverse" class="white">
+                           Category
+                           <span ng-show="sortType == 'category' && !sortReverse" class="fa fa-caret-down white"></span>
+                           <span ng-show="sortType == 'category' && sortReverse" class="fa fa-caret-up white"></span>
+                        </a>
+                     </th>
+                     <th class="white bold text-center" >
+                        <a href="" ng-click="sortType = 'subCategory'; sortReverse = !sortReverse" class="white">
+                           Sub Category
+                           <span ng-show="sortType == 'subCategory' && !sortReverse" class="fa fa-caret-down white"></span>
+                           <span ng-show="sortType == 'subCategory' && sortReverse" class="fa fa-caret-up white"></span>
+                        </a>
+                     </th>
+                     <th class="white bold text-center" >
+                        Edit
+                     </th>
+                     <th class="white bold text-center" >
+                        Deactivate
+                     </th>
+                  </tr>
+                  <tr dir-paginate="question in questionList  | orderBy:sortType:sortReverse | filter : searchQuestion |itemsPerPage:5 ">
+                     <td class="text-center">
+                     <span class="">
+                        {{question.questionName}}
+                     </span>
+                     </td>
+                     <td >
+                        <span ng-repeat="indi in question.indicativeValues">
+                          <span> {{indi.score}}-{{indi.value}}</span><br>
+                        </span>
+                     </td>
+                     <td class="text-center">
+                     <span class="">
+                        {{question.assessmentArea}}
+                     </span>
+                     </td>
+                     <td class="text-center">
+                     <span class="">
+                        {{question.category}}
+                     </span>
+                     </td>
+                     <td class="text-center">
+                     <span class="">
+                        {{question.subCategory}}
+                     </span>
+                     </td>
+                     <td class="text-center">
+                     <span>
+                        <a class="a-toggle bold" ng-click="question.active==false||editQuestionDialog.open(question,questionList)" 
+                            uib-tooltip="Click to Edit" tooltip-placement="right">
+                           <span class="glyphicon glyphicon-pencil" ng-class="{'deactivateRed' : question.active==false}"></span>
+                        </a>
+                     </span>
+                     </td>
+                     <td class="text-center">
+                        <a class="a-toggle bold" ng-click="deleteQuestion(question,1)" 
+                            uib-tooltip="Click to Deactivate" tooltip-placement="right">
+                           <span class="glyphicon glyphicon-ban-circle" ng-class="{'deactivateRed' : question.active==false}"></span>
+                        </a>
+
+                     </td>
+                  </tr>
+               </table>
+            </div>
+            <div class="text-center">
+               <dir-pagination-controls max-size="5" direction-links="true" boundary-links="true"></dir-pagination-controls>
+            </div>
+
+         </div>
+      </div>
+      </div>
+       <!-- *** EDIT Modal Popup *** --> 
+      <edit-question-dialog model="editQuestionDialog"></edit-question-dialog>
+        <!-- *** Delete Modal Popup *** --> 
+      <div ng-include="'./views/deleteModalPopup.html'"></div>
+   </div>
+   <!-- *** FOOTER *** -->
+   <div footer></div>
+</div>

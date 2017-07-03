@@ -1,0 +1,52 @@
+<style>
+
+    .highcharts-contextbutton{
+        opacity: 0;
+    }
+    </style>
+<div ng-controller="viewSpiderGraphCtrl" ng-cloak ng-init="init()">
+    <!-- *** HEADER *** -->
+    <div header></div>
+    <div id="mainDiv" class="container mainContainer">
+
+        <div class="headingTitle">Graphical Reports</div>
+
+        <div id="notificationSettings" class="well wellClass">
+            <div class="titleHeading">Business Needs Vs Business and Environment Complexity Vs Delivery Maturity</div>
+            <div style="min-width: 1100px; max-width: 1100px; height: 31px; margin: 10px auto;">
+                <span style="margin-left:0px;">
+                    <B>Please Provide Criteria's For The Graph : </B>
+                </span>
+                <span style="margin-left:10px;">
+                    <select ng-click="fetchBusinessUnitsList()" ng-model="userSelected.accountId" class="width-18per">
+                        <option ng-repeat="account in uniqueAccountList" value="{{account.accountId}}">{{account.accountName}}</option>
+                    </select>
+                </span>
+                <span style="margin-left:10px;">
+                    <select ng-click="fetchApplicationList()" ng-model="userSelected.businessUnitId" class="width-18per">
+                        <option ng-repeat="businessUnit in filteredBusinessList" value="{{businessUnit.businessUnitId}}">{{businessUnit.businessUnitName}}</option>
+                    </select>
+                </span>
+                <span style="margin-left:10px;">
+                    <select ng-click="" ng-model="userSelected.applicationId" class="width-18per">
+                        <option ng-repeat="application in filteredApplicationList" value="{{application.applicationId}}">{{application.applicationName}}</option>
+                    </select>
+                </span>
+                <span style="margin-left:10px;">
+                    <button ng-click="showApplicationView()" class=" btn-primary">Show Details</button>
+                </span>
+            </div>
+            <div id="container" style="min-width: 800px; max-width: 800px; height: 500px; margin: 0 auto"></div>
+            <!--  <div class="text-center">
+                  <button ng-click="showDetails('0')" class="btn btn-primary">Show Assessment Level </button>
+                  <button ng-click="showDetails('1')" class="btn btn-primary">Show Category Level</button>
+                  <button ng-click="showDetails('2')" class="btn btn-primary">Show Sub Category Level</button>
+              </div>-->
+        </div>
+    </div>
+    <!-- *** FOOTER *** -->
+    <div footer></div>
+
+    <input type="text" id="myText">
+
+</div>

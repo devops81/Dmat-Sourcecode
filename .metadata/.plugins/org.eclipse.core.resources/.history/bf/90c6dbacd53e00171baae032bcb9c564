@@ -1,0 +1,366 @@
+package com.devopps.portal.dao;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.type.StandardBasicTypes;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import com.devopps.portal.exception.DuplicateAreasException;
+import com.devopps.portal.exception.NoRecordsFoundException;
+import com.devopps.portal.model.ApplicationBusinessUnitEntity;
+import com.devopps.portal.model.ApplicationDetailEntity;
+import com.devopps.portal.model.ApplicationEntity;
+import com.devopps.portal.model.AuditMappingDetails;
+import com.devopps.portal.model.BusinessUnitAccountEntity;
+import com.devopps.portal.model.BusinessUnitDetails;
+import com.devopps.portal.model.BusinessUnitEntity;
+import com.devopps.portal.model.BusinessUnitRequestBody;
+import com.devopps.portal.model.ISaveApplicationServiceParameters;
+import com.devopps.portal.model.ManageAuditMappingRequestBody;
+import com.devopps.portal.model.QuestionEntity;
+import com.devopps.portal.model.QuestionScoreEntity;
+import com.devopps.portal.model.SaveApplicationRequestBody;
+import com.devopps.portal.util.IConstants;
+import com.devopps.portal.util.IHibernateQueries;
+import com.devopps.portal.util.Log;
+import com.devopps.portal.util.LogFactory;
+
+@Component("IApplicationDao")
+public class ApplicationDaoImpl implements IApplicationDao{
+	
+	private static final Log LOGGER = LogFactory.getLog(ApplicationDaoImpl.class);
+
+	@Autowired
+	private SessionFactory sessionFactory;
+	
+	@Override
+	public void saveApplicationDetails(ISaveApplicationServiceParameters saveApplicationServiceParams) {
+		Session session = getSessionFactory().openSession();
+		Transaction tx = session.beginTransaction();
+		List<String> applicationIds = saveApplicationServiceParams.getSaveApplicationRequest().getApplicationIds();
+		for (String application : applicationIds) {
+			ApplicationEntity appEntity = new ApplicationEntity();
+			//appEntity.setUserId(saveApplicationServiceParams.getSaveApplicationRequest().getUserId());
+			//appEntity.setApplicationId(application);
+			session.persist(appEntity);
+		}
+		tx.commit();
+		session.close();
+	}
+	/**
+	 * @return the sessionFactory
+	 */
+	public SessionFactory getSessionFactory() {
+		return sessionFactory;
+	}
+	/**
+	 * @param sessionFactory the sessionFactory to set
+	 */
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
+	@Override
+	public int saveApplication(SaveApplicationRequestBody saveApplicationRequestBody) throws DuplicateAreasException, NoRecordsFoundException {
+		Session session = getSessionFactory().openSession();
+		Transaction tx = session.beginTransaction();
+		int applicationId = -1;
+		boolean isDuplicateApplicationArea = false;
+		
+		List<QuestionEntity> queryResult =  session.createQuery(IHibernateQueries.SELECT_QUESTION_MASTER_DATA).list();
+		
+		List<BusinessUnitAccountEntity> businessUnitData =  session.createQuery(IHibernateQueries.SELECT_ACCOUNT_ID).setParameter("businessUnitId", saveApplicationRequestBody.getBusinessUnitId()).list();
+		
+		isDuplicateApplicationArea = isDuplicateApplicationArea(saveApplicationRequestBody, session);
+		if (isDuplicateApplicationArea) {
+			throw new DuplicateAreasException("Duplicate Application Areas");
+		}
+		if (saveApplicationRequestBody.getApplicationId() == -1) {
+			ApplicationDetailEntity appEntity = new ApplicationDetailEntity();
+			ApplicationBusinessUnitEntity appBusinessUnitEntity = new ApplicationBusinessUnitEntity();
+			appEntity.setApplicationName(saveApplicationRequestBody.getApplicationName());
+			session.save(appEntity);
+			appBusinessUnitEntity.setApplicationId(appEntity.getApplicationId());
+			appBusinessUnitEntity.setBusinessUnitId(saveApplicationRequestBody.getBusinessUnitId());
+			appBusinessUnitEntity.setIsActive(saveApplicationRequestBody.isActive() == true ? 1 : 0);
+			session.save(appBusinessUnitEntity);
+			applicationId = appEntity.getApplicationId();
+			 for (QuestionEntity questionData : queryResult) {
+				QuestionScoreEntity questionScoreEntity  = new QuestionScoreEntity();
+				questionScoreEntity.setAccountId(businessUnitData.get(0).getAccountId());
+				questionScoreEntity.setBusinessUnitId(saveApplicationRequestBody.getBusinessUnitId());
+				questionScoreEntity.setApplicationId(applicationId);
+				questionScoreEntity.setQuestionId(questionData.getQuestionId());
+				questionScoreEntity.setAssessmentId(questionData.getAssessmentId());
+				questionScoreEntity.setComments(IConstants.BLANK_STRING);
+				session.save(questionScoreEntity);
+				if( queryResult.size() % 50 == 0 ) { // Same as the JDBC batch size
+			        //flush a batch of inserts and release memory:
+			        session.flush();
+			        session.clear();
+			    }
+			 }
+		} else {
+			List existingApplications = session.createCriteria(ApplicationDetailEntity.class).add(Restrictions.eq("applicationId",saveApplicationRequestBody.getApplicationId())).list();
+			if (existingApplications.size() > 0) {
+				ApplicationDetailEntity appEntity = (ApplicationDetailEntity)session.load(ApplicationDetailEntity.class, saveApplicationRequestBody.getApplicationId());
+				ApplicationBusinessUnitEntity appBusinessUnitEntity = (ApplicationBusinessUnitEntity)session.load(ApplicationBusinessUnitEntity.class, saveApplicationRequestBody.getApplicationId());
+				appEntity.setApplicationName(saveApplicationRequestBody.getApplicationName());
+				applicationId = saveApplicationRequestBody.getApplicationId();
+				appBusinessUnitEntity.setBusinessUnitId(saveApplicationRequestBody.getBusinessUnitId());
+				appBusinessUnitEntity.setIsActive(saveApplicationRequestBody.isActive() == true ? 1 : 0);
+				session.update(appEntity);
+				session.update(appBusinessUnitEntity);
+				
+				List<QuestionScoreEntity> questionList = session.createCriteria(QuestionScoreEntity.class).add(Restrictions.eq("applicationId",saveApplicationRequestBody.getApplicationId())).list();
+				for (int i=0; i<questionList.size();i++) {
+					QuestionScoreEntity questionScoreEntity = (QuestionScoreEntity)session.load(QuestionScoreEntity.class,questionList.get(i).getId());
+					questionScoreEntity.setBusinessUnitId(saveApplicationRequestBody.getBusinessUnitId());
+					questionScoreEntity.setApplicationId(saveApplicationRequestBody.getApplicationId());
+					questionScoreEntity.setComments(IConstants.BLANK_STRING);
+					session.update(questionScoreEntity);
+					if(questionList.size() % 50 == 0 ) { // Same as the JDBC batch size
+				        //flush a batch of inserts and release memory:
+				        session.flush();
+				        session.clear();
+				    }
+				}
+				
+			} else {
+				throw new NoRecordsFoundException("NO Records Found");
+			}
+		}
+		tx.commit();
+		session.close();
+		return applicationId;
+	}
+	
+	/*private boolean createApplicationBusinessUnitMapping(
+			SaveApplicationRequestBody saveApplicationRequestBody,
+			Session session) throws DuplicateAreasException {
+		@SuppressWarnings("unchecked")
+		boolean isApplicationUpdated = false;
+		
+		ApplicationBusinessUnitEntity appBusinessUnitEntity = new ApplicationBusinessUnitEntity();
+		List<ApplicationDetailEntity> queryResult =  session.createQuery(IHibernateQueries.SELECT_APPLICATION_AREAS).setParameter("applicationName", saveApplicationRequestBody.getApplicationName()).list();
+		 for (ApplicationDetailEntity applicationDetails : queryResult) {
+			 if (applicationDetails.getApplicationName().equalsIgnoreCase(saveApplicationRequestBody.getApplicationName())) {
+				 appBusinessUnitEntity.setBusinessUnitId(saveApplicationRequestBody.getBusinessUnitId());
+				 appBusinessUnitEntity.setApplicationId(applicationDetails.getApplicationId());
+				 saveApplicationRequestBody.setApplicationId(applicationDetails.getApplicationId());
+				 appBusinessUnitEntity.setIsActive(saveApplicationRequestBody.isActive() == true ? 1 : 0);
+				 session.save(appBusinessUnitEntity);
+				 isApplicationUpdated = true;
+			 }
+		 }
+		return isApplicationUpdated;
+	}*/
+	
+	private boolean isDuplicateApplicationArea (SaveApplicationRequestBody saveApplicationRequestBody,
+			Session session) {
+		boolean isDuplicateApplicationArea = false;
+		List<ApplicationDetailEntity> queryResult =  session.createQuery(IHibernateQueries.SELECT_APPLICATION_AREAS).setParameter("applicationName", saveApplicationRequestBody.getApplicationName()).list();
+		 for (ApplicationDetailEntity applicationDetails : queryResult) {
+			 if (applicationDetails.getApplicationName().equalsIgnoreCase(saveApplicationRequestBody.getApplicationName())) {
+				 isDuplicateApplicationArea = true;
+				 break;
+			 }}
+		return isDuplicateApplicationArea;
+	}
+	
+	private boolean isDuplicateBusinessUnit (BusinessUnitRequestBody businessUnitRequestBody, Session session) {
+		boolean isDuplicateBusinessUnit = false;
+		List<BusinessUnitEntity> queryResult =  session.createQuery(IHibernateQueries.SELECT_BUSINESS_UNITS).setParameter("businessUnitName", businessUnitRequestBody.getBusinessUnitName()).list();
+		for (BusinessUnitEntity businessUnitDetails : queryResult) {
+			 if (businessUnitDetails.getBusinessUnitName().equalsIgnoreCase(businessUnitRequestBody.getBusinessUnitName())) {
+				 isDuplicateBusinessUnit = true;
+				 break;
+			 }}
+		return isDuplicateBusinessUnit;
+	}
+	
+	@Override
+	public int saveBusinessUnit(BusinessUnitRequestBody businessUnitRequestBody)
+			throws NoRecordsFoundException, DuplicateAreasException {
+		// TODO Auto-generated method stub
+		Session session = getSessionFactory().openSession();
+		Transaction tx = session.beginTransaction();
+		int businessUnitId = -1;
+		boolean isDuplicateBusinessUnit = false;
+		isDuplicateBusinessUnit = isDuplicateBusinessUnit(businessUnitRequestBody, session);
+		if (isDuplicateBusinessUnit) {
+			throw new DuplicateAreasException();
+		}
+		if (businessUnitRequestBody.getBusinessUnitId() == -1) {
+			BusinessUnitEntity businessUnitEntity = new BusinessUnitEntity();
+			BusinessUnitAccountEntity businessUnitAccountEntity = new BusinessUnitAccountEntity();
+			businessUnitEntity.setBusinessUnitName(businessUnitRequestBody.getBusinessUnitName());
+			session.save(businessUnitEntity);
+			businessUnitAccountEntity.setBusinessUnitId(businessUnitEntity.getBusinessUnitId());
+			businessUnitAccountEntity.setAccountId(businessUnitRequestBody.getAccountId());
+			businessUnitAccountEntity.setIsActive(businessUnitRequestBody.isActive() == true ?  1 : 0);
+			session.save(businessUnitAccountEntity);
+			businessUnitId = businessUnitEntity.getBusinessUnitId();
+		} else {
+			List existingBusinessUnits = session.createCriteria(BusinessUnitEntity.class).add(Restrictions.eq("businessUnitId",businessUnitRequestBody.getBusinessUnitId())).list();
+			if (existingBusinessUnits.size() > 0) {
+				BusinessUnitEntity businessUnitEntity = (BusinessUnitEntity)session.load(BusinessUnitEntity.class, businessUnitRequestBody.getBusinessUnitId());
+				BusinessUnitAccountEntity businessUnitAccountEntity = (BusinessUnitAccountEntity)session.load(BusinessUnitAccountEntity.class, businessUnitRequestBody.getBusinessUnitId());
+				businessUnitEntity.setBusinessUnitName(businessUnitRequestBody.getBusinessUnitName());
+				businessUnitId = businessUnitEntity.getBusinessUnitId();
+				businessUnitAccountEntity.setAccountId(businessUnitRequestBody.getAccountId());
+				businessUnitAccountEntity.setBusinessUnitId(businessUnitId);
+				businessUnitAccountEntity.setIsActive(businessUnitRequestBody.isActive() == true ? 1 : 0);
+				session.update(businessUnitEntity);
+				session.update(businessUnitAccountEntity);
+			} else {
+				throw new NoRecordsFoundException("NO Records Found");
+			}
+		}
+		tx.commit();
+		session.close();
+		return businessUnitId;
+	}
+	
+	/*private boolean createBusinessUnitAccountMapping(
+			BusinessUnitRequestBody businessUnitRequestBody, Session session) {
+		@SuppressWarnings("unchecked")
+		boolean isBusinessUnitUpdated = false;
+		
+		BusinessUnitAccountEntity businessUnitAccountEntity = new BusinessUnitAccountEntity();
+		List<BusinessUnitEntity> queryResult =  session.createQuery(IHibernateQueries.SELECT_BUSINESS_UNITS).setParameter("businessUnitName", businessUnitRequestBody.getBusinessUnitName()).list();
+		 for (BusinessUnitEntity businessUnitDetails : queryResult) {
+			 if (businessUnitDetails.getBusinessUnitName().equalsIgnoreCase(businessUnitRequestBody.getBusinessUnitName())) {
+				 businessUnitAccountEntity.setBusinessUnitId(businessUnitRequestBody.getBusinessUnitId());
+				 businessUnitAccountEntity.setAccountId(businessUnitRequestBody.getAccountId());
+				 businessUnitAccountEntity.setIsActive(businessUnitRequestBody.isActive() == true ? 1 : 0);
+				 session.save(businessUnitAccountEntity);
+				 isBusinessUnitUpdated = true;
+			 }
+		 }
+		return isBusinessUnitUpdated;
+	}
+	*/
+	@Override
+	public List<BusinessUnitDetails> getBusinessUnits(
+			BusinessUnitRequestBody businessUnitRequestBody) {
+		Session session = getSessionFactory().openSession();
+		List<Object[]> businessUnitInfo = null;
+		Query query =  session.createQuery(IHibernateQueries.GET_BUSINESS_UNITS);
+		if (businessUnitRequestBody.isShowDistinctBusinessUnits()) {
+			 query =  session.createQuery(IHibernateQueries.GET_DISTINCT_BUSINESS_UNITS);
+		} 
+		
+		int questionScoreCount = -1;
+		businessUnitInfo = (List<Object[]>)query.list();
+		System.out.println(businessUnitInfo);
+		final List<BusinessUnitDetails> businessUnitDetails = new ArrayList <BusinessUnitDetails>();
+		int activeFlag = -1;
+		BusinessUnitDetails businessUnitAccountInfo = null;
+		if (businessUnitRequestBody.isShowDistinctBusinessUnits()) {
+			for (Object[] businessUnit : businessUnitInfo) {
+				businessUnitAccountInfo = new BusinessUnitDetails();
+				businessUnitAccountInfo.setBusinessUnitId((Integer)businessUnit[0]);
+				businessUnitAccountInfo.setBusinessUnitName((String)businessUnit[1]);
+				businessUnitDetails.add(businessUnitAccountInfo);
+		}} else {
+			for (Object[] businessUnit : businessUnitInfo) {
+				businessUnitAccountInfo = new BusinessUnitDetails();
+				businessUnitAccountInfo.setBusinessUnitId((Integer)businessUnit[0]);
+				businessUnitAccountInfo.setBusinessUnitName((String)businessUnit[1]);
+				businessUnitAccountInfo.setAccountId((Integer)businessUnit[2]);
+				businessUnitAccountInfo.setAccountName((String)businessUnit[3]);
+				activeFlag = (Integer)businessUnit[4];
+				businessUnitAccountInfo.setActive(activeFlag == 1 ? true : false);
+				questionScoreCount = session.createCriteria(QuestionScoreEntity.class).add(Restrictions.eq("accountId",(Integer)businessUnit[2])).
+				add(Restrictions.eq("businessUnitId",(Integer)businessUnit[0])).list().size();
+				businessUnitAccountInfo.setEditAllowed(questionScoreCount > 0 ? false : true);
+				businessUnitDetails.add(businessUnitAccountInfo);
+			}
+		}
+		if (businessUnitDetails.size() == 1) {
+			businessUnitAccountInfo = new BusinessUnitDetails();
+			businessUnitAccountInfo.setBusinessUnitId(-1);
+			businessUnitAccountInfo.setBusinessUnitName("");
+			businessUnitAccountInfo.setAccountId(-1);
+			businessUnitAccountInfo.setAccountName("");
+			businessUnitAccountInfo.setActive(false);
+			businessUnitDetails.add(businessUnitAccountInfo);
+		}
+		session.close();
+		System.out.println(businessUnitDetails.toString());
+		return businessUnitDetails;
+	}
+	
+	@Override
+	public List<AuditMappingDetails> getAuditMappingData(
+			ManageAuditMappingRequestBody masterDataMappingRequestBody) {
+		Session session = getSessionFactory().openSession();
+		List<Object[]> masterDataInfo = null;
+		Query query =  session.createSQLQuery(IHibernateQueries.GET_AUDIT_MAPPING_DATA)
+				.addScalar("account_id",StandardBasicTypes.INTEGER)
+				.addScalar("account_name",StandardBasicTypes.STRING)
+				.addScalar("business_unit_id",StandardBasicTypes.INTEGER)
+				.addScalar("business_unit_name",StandardBasicTypes.STRING)
+				.addScalar("assessment_id",StandardBasicTypes.INTEGER)
+				.addScalar("assessment_name",StandardBasicTypes.STRING)
+				.addScalar("isAssessmentIdActive",StandardBasicTypes.INTEGER)
+				.addScalar("application_id",StandardBasicTypes.INTEGER)
+				.addScalar("application_name",StandardBasicTypes.STRING);
+		masterDataInfo = (List<Object[]>)query.list();
+		 List<AuditMappingDetails> auditMappingDetails = new ArrayList <AuditMappingDetails>();
+		AuditMappingDetails auditMappingData = null;
+		for (Object[] masterData : masterDataInfo) {
+				auditMappingData = new AuditMappingDetails();
+				auditMappingData.setAccountId((Integer)masterData[0]);
+				auditMappingData.setAccountName((String)masterData[1]);
+				auditMappingData.setBusinessUnitId((Integer)masterData[2]);
+				auditMappingData.setBusinessUnitName((String)masterData[3]);
+				auditMappingData.setAssessmentId((Integer)masterData[4]);
+				auditMappingData.setAssessmentAreaName((String)masterData[5]);
+				auditMappingData.setAssessmentIdActive((Integer)masterData[6] == 1 ? true : false);
+				auditMappingData.setApplicationId((Integer)masterData[7]);
+				auditMappingData.setApplicationName((String)masterData[8]);
+				auditMappingDetails.add(auditMappingData);
+		} 
+		if (auditMappingDetails.size() == 1) {
+			auditMappingData = new AuditMappingDetails();
+			auditMappingData.setAccountId(-1);
+			auditMappingData.setAccountName("");
+			auditMappingData.setBusinessUnitId(-1);
+			auditMappingData.setBusinessUnitName("");
+			auditMappingDetails.add(auditMappingData);
+		}
+		session.close();
+		return auditMappingDetails;
+	}
+	
+	@Override
+	public void saveAuditMappingData(
+			ManageAuditMappingRequestBody masterDataMappingRequestBody) {
+		Session session = getSessionFactory().openSession();
+		Transaction tx = session.beginTransaction();
+		List<QuestionScoreEntity> existingQuestionData = session.createCriteria(QuestionScoreEntity.class)
+				.add(Restrictions.eq("businessUnitId",masterDataMappingRequestBody.getBusinessUnitId()))
+				.add(Restrictions.eq("accountId",masterDataMappingRequestBody.getAccountId()))
+				.add(Restrictions.eq("assessmentId",masterDataMappingRequestBody.getAssessmentId()))
+				.list();
+		if (existingQuestionData != null && existingQuestionData.size() > 0) {
+		for (int i = 0 ; i<existingQuestionData.size();i++) {
+			QuestionScoreEntity questionScoreEntity = (QuestionScoreEntity)session.load(QuestionScoreEntity.class, existingQuestionData.get(i).getId());
+			questionScoreEntity.setAssessmentIdActive(masterDataMappingRequestBody.getIsAssessmentActive() == 1 ? true : false);
+			session.update(questionScoreEntity);
+		}}
+		tx.commit();
+		session.close();
+	}
+
+	
+
+}

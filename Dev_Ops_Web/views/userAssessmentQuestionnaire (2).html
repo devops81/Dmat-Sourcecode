@@ -1,0 +1,329 @@
+<style>
+    .k-progress-status{
+
+        opacity: 0;
+    }
+    .k-progressbar .k-state-selected{
+        background-color: #2e6da4;
+    }
+    body{
+        height: auto;
+    }
+    
+    
+    
+</style>
+<div ng-controller="userAssessmentQuestionnaireCtrl" ng-cloak ng-init="init()">
+<!-- *** HEADER *** -->
+<div header></div>
+
+<div id="mainDiv" class="container mainContainer">
+
+    <div class="headingTitle" style="margin-bottom: -20px;margin-top: -3%;margin-left: -0.15%;
+     position: fixed ; width : 85.2%; background-color: rgba(255,255,255,1);" >
+        Assessment Questionnaire
+        <br>
+
+            <div ng-show="pro" class="progress" style="margin-bottom: -2%" >
+                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" id="provalue" aria-valuemin="0"
+                     aria-valuemax="100" ng-style="{'width': pro  +'%'}"></div>
+            </div>
+        <!--<md-content layout-padding style="background-color: white;" ng-if="pro">-->
+
+            <!--<div layout="row" layout-sm="column" layout-align="space-around">-->
+                <!--<md-progress-circular md-mode="determinate" value="{{pro}}"></md-progress-circular>-->
+            <!--</div>-->
+        <!--</md-content>-->
+     <center>  <span ng-show="pro" style="font-size: medium; margin-top: 0% ;margin-left:auto;margin-right:auto;text-align: center">Your Survey Progress {{proShow}}%</span>
+     </center>
+
+
+
+    </div>
+    
+    <div id="assessmentQuestn" class="well wellClass" ng-show="selectApplicationView" ng-style="{'margin-top': marginTopBar  +'%'}">
+        <div class="titleHeading">Select Application</div>
+        <form name="myForm">
+        <div class="containerBody">
+            <div class="padding-bottom15">
+                <span class="popoverTool" ng-click="searchApplicationPopup()">
+                    <a href="" data-toggle="popover" data-trigger="hover" data-content="Click to Search and Select Application">
+                        <label>
+                            <span class="disabledBox">
+                                <input type="text" ng-model="selectedApplication" placeholder="Select An Application" size="50" name="selectedApplication"
+                                           class="form-control textBox inputWidth" disabled required>
+                                <span class="input-group-btn searchFont">
+                                    <span class=" glyphicon glyphicon-search searchIconProfile"></span>
+                                </span>
+                            </span>
+                        </label>
+                    </a>
+                </span>
+            </div>
+            <div>
+                <!--<button ng-if="!selectedApplication" ng-click="startAssessment(currentApp,1)" class="addBtnAssess btn" ng-disabled="!selectedApplication" >Start Assessment</button>-->
+                <button ng-disabled="myForm.selectedApplication.$invalid" ng-click="startAssessment(currentApp,1)" class="addBtnAssess btn"  >Start Assessment</button>
+
+            </div>
+        </div>
+        </form>
+    </div>
+
+    <div ng-if='showMess' style="margin-top: 5%">
+        <h4 align="center">No assessment available </h4>
+    </div>
+
+ <!--    <ul id="progressBar" class="bs-wizard"  ng-hide="selectApplicationView">
+        <li ng-repeat="step in steps" id={{$index}} class="bs-wizard-step" ng-class="{disabled :$index , active: $index==getCurrentStepIndex()}">
+            <div class="progress">
+                <div class="progress-bar">
+                </div>
+            </div>
+            <a href="#" class="bs-wizard-dot"></a>
+            <p class="text-center">{{step}}</p>
+        </li>
+    </ul> -->
+    
+     <!--<ul id="progressBar" class="bs-wizard" ng-hide="selectApplicationView">
+            <li   ng-repeat="step in steps" id={{$index}} class="bs-wizard-step" ng-class="{disabled :$index , active: $index==getCurrentStepIndex()}">
+                <div class="progress">
+                    <div class="progress-bar">
+                    </div>
+                </div>
+                <a class="bs-wizard-dot"></a>
+                <p class="text-center">{{step}}</p>
+            </li>
+        </ul>
+-->
+<!--    <div ng-show="pro" kendo-progress-bar="progressBar" k-min="0" k-max="100" ng-model="pro"
+
+         class="progress-bar progress-bar-info progress-bar-striped" style="width: 100%; height: 150%">
+        <h6 align="center">Your Survey Progress </h6>
+    </div>-->
+
+
+
+     <div ng-hide="selectApplicationView" style="margin-top: 7%">
+
+        <!-- <div id="progressBarContainer" class="progressBar"></div>-->
+         <div class="padding-left10" ng-repeat="step in steps" >
+            <div  ng-if="selection == step ">
+
+                <div class="form-group row paddingLeftRight">
+                   <!-- <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 row formRow">
+                        <span class="formField col-lg-6 col-sm-6 col-xs-6">Application Name:</span>
+                        <span class="bold font-size18 col-lg-6 col-sm-6 col-xs-6">
+                            {{selectedApplication}}
+                        </span>
+                    </div>-->
+                   <!-- <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 row">
+                        <span class="formField col-lg-6 col-sm-6 col-xs-6">Completion Status:</span>
+                        &lt;!&ndash;<span class="bold font-size18 col-lg-6 col-sm-6 col-xs-6">
+                            {{step}}
+                        </span>&ndash;&gt;
+                    </div>-->
+                </div>
+
+                <!-- <div class="form-group row formAlign">
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 row formRow">
+                        <span class="formFieldFilter col-lg-6 col-sm-6 col-xs-6">Filter By Category:</span>
+                        <span class="col-lg-6 col-sm-6 col-xs-6">
+                            <input type="text" class="form-control textBox"  ng-model="searchCategory"  placeholder="Category">
+                        </span>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 row">
+                        <span class="formFieldFilter col-lg-6 col-sm-6 col-xs-6">Filter By Sub-Category:</span>
+                        <span class="col-lg-6 col-sm-6 col-xs-6">
+                            <input type="text" class="form-control textBox"  ng-model="searchSubCategory"  placeholder="Sub-Category">
+                        </span>
+                    </div>
+                 </div> -->
+                <table class="table tblClass table-bordered" cellspacing="0">
+                    <tr class="blue-bg" >
+                        <!--<th style="width: 15%;" class="white bold text-center">
+                             <a href="" ng-click="sortType = 'assessmentArea'; sortReverse = !sortReverse" class="white">
+                                 Assessment Area
+                                 <span ng-show="sortType == 'assessmentArea' && !sortReverse" class="fa fa-caret-down white"></span>
+                                 <span ng-show="sortType == 'assessmentArea' && sortReverse" class="fa fa-caret-up white"></span>
+                             </a>
+                        </th>-->
+                        <!-- <th style="width: 15%;" class="white bold text-center">
+                            <a href="" ng-click="sortType = 'category'; sortReverse = !sortReverse" class="white">
+                                 Category
+                                 <span ng-show="sortType == 'category' && !sortReverse" class="fa fa-caret-down white"></span>
+                                 <span ng-show="sortType == 'category' && sortReverse" class="fa fa-caret-up white"></span>
+                             </a>
+                        </th>
+                        <th style="width: 10%;" class="white bold text-center">
+                            <a href="" ng-click="sortType = 'subCategory'; sortReverse = !sortReverse" class="white">
+                                 Sub Category
+                                 <span ng-show="sortType == 'subCategory' && !sortReverse" class="fa fa-caret-down white"></span>
+                                 <span ng-show="sortType == 'subCategory' && sortReverse" class="fa fa-caret-up white"></span>
+                             </a>
+                        </th> -->
+                        <th style="width: 15%;" class="white bold text-center">
+                            <a href="" ng-click="sortType = 'assessmentCriteria'; sortReverse = !sortReverse" class="white">
+                                  Assessment Criteria
+                                 <span ng-show="sortType == 'assessmentCriteria' && !sortReverse" class="fa fa-caret-down white"></span>
+                                 <span ng-show="sortType == 'assessmentCriteria' && sortReverse" class="fa fa-caret-up white"></span>
+                             </a>
+                        </th>
+                        <th style="width: 20%;" class="white bold text-center">
+                                 Guidelines/Indicative Values
+                        </th>
+                        <th style="width: 12%;" class="white bold text-center">
+                            Score 
+                        </th>
+                        
+                         
+                         <th style="width: 10%;" class="white bold text-center">
+                            Comments
+                        </th>
+                    </tr>
+                    
+                    <tr dir-paginate="assessment in assessmentQuestionnaireList | filter: {assessmentArea: step, category:searchCategory,
+                    subCategory:searchSubCategory} | orderBy:sortType:sortReverse |itemsPerPage:5" current-page="currentPage">
+                            <!--<td>
+                                <span>{{assessment.assessmentArea}}</span>
+                            </td>-->
+                            <!-- <td>
+                                <span>{{assessment.category}}</span>
+                            </td>
+                            <td>
+                                <span>{{assessment.subCategory}}</span>
+                            </td> -->
+                            <td>
+                                <span>{{assessment.assessmentCriteria}}</span>
+                            </td>
+                            <td>
+                            <span ng-repeat = "guideline in assessment.GuidelineArray" ng-if="guideline.length> 4">
+                                {{guideline}}<br/>
+                            </span>
+                            </td>
+                           <!-- <td>
+                                <input-stars max="5" ng-model='modeltest[assessment.Rating]' ng-click="rateMe(starRating,assessment)"></input-stars>
+                            </td>-->
+
+
+                            <td class="">
+                                <span  ng-if="assessment.GuidelineArray[0].length> 4">
+                            	 <input type="radio" ng-if="assessment.GuidelineArray[0].length> 4" name="{{assessment.assessmentCriteria}}" ng-model="assessment.scoreUser" value="1" ng-click="rateMe2(assessment,1)">&nbsp;
+                                <input-stars max="1" ng-if="assessment.scoreUser == 1 && assessment.GuidelineArray[0].length> 4" ng-model="assessment.scoreUser" ></input-stars>
+                                <input-stars max="1" ng-if="assessment.scoreUser != 1 && assessment.GuidelineArray[0].length> 4" ng-model="noneSelect"></input-stars>
+                                </br> </span>
+                                <span  ng-if="assessment.GuidelineArray[1].length> 4">
+                                 <input type="radio" ng-if="assessment.GuidelineArray[1].length> 4" name="{{assessment.assessmentCriteria}}" ng-model="assessment.scoreUser" value="2" ng-click="rateMe2(assessment,2)">&nbsp;
+                                <input-stars max="2" ng-if="assessment.scoreUser == 2 && assessment.GuidelineArray[1].length> 4" ng-model="assessment.scoreUser" ></input-stars>
+                                <input-stars max="2" ng-if="assessment.scoreUser != 2 && assessment.GuidelineArray[1].length> 4" ng-model="noneSelect"></input-stars>
+                                </br></span>
+                                <span  ng-if="assessment.GuidelineArray[2].length> 4">
+                                <input type="radio" ng-if="assessment.GuidelineArray[2].length> 4" name="{{assessment.assessmentCriteria}}" ng-model="assessment.scoreUser" value="3" ng-click="rateMe2(assessment,3)">&nbsp;
+                                <input-stars max="3" ng-if="assessment.scoreUser == 3 && assessment.GuidelineArray[2].length> 4" ng-model="assessment.scoreUser" ></input-stars>
+                                <input-stars max="3" ng-if="assessment.scoreUser != 3 && assessment.GuidelineArray[2].length> 4" ng-model="noneSelect"></input-stars>
+                                </br></span>
+                                <span  ng-if="assessment.GuidelineArray[3].length> 4">
+                                 <input type="radio"  ng-if="assessment.GuidelineArray[3].length> 4" name="{{assessment.assessmentCriteria}}" ng-model="assessment.scoreUser" value="4" ng-click="rateMe2(assessment,4)">&nbsp;
+                                <input-stars max="4" ng-if="assessment.scoreUser == 4 && assessment.GuidelineArray[3].length> 4" ng-model="assessment.scoreUser" ></input-stars>
+                                <input-stars max="4" ng-if="assessment.scoreUser != 4 &&  assessment.GuidelineArray[3].length> 4" ng-model="noneSelect"></input-stars>
+                                </br> </span>
+                                <span  ng-if="assessment.GuidelineArray[4].length> 4">
+                                <input type="radio" ng-if="assessment.GuidelineArray[4].length> 4"  name="{{assessment.assessmentCriteria}}" ng-model="assessment.scoreUser" value="5" ng-click="rateMe2(assessment,5)">&nbsp;
+                                <input-stars max="5" ng-if="assessment.scoreUser == 5 && assessment.GuidelineArray[4].length> 4" ng-model="assessment.scoreUser" ></input-stars>
+                                <input-stars max="5" ng-if="assessment.scoreUser != 5 && assessment.GuidelineArray[4].length> 4" ng-model="noneSelect"></input-stars>
+                               </span>
+                               
+                              
+                               
+                               
+                            </td>
+
+                            
+
+
+                            <td>
+                            	<textarea cols="30" style="height: 140px; margin-left: 10%;" ng-model='assessment.comments'></textarea>
+                                <!-- <textarea style="height: 140px">{{assessment.comments}}</textarea>-->
+                            </td>
+                        </tr>
+                </table>
+                <div id="check" class="text-center">
+                    <dir-pagination-controls max-size="5" current-page="current" direction-links="true" boundary-links="true"
+                                             template-url="./views/dirPagination.tpl.html">
+                    </dir-pagination-controls>
+                </div>
+                
+            </div>
+         </div>
+
+         <div ng-hide="selectApplicationView">
+             <div ng-if="saveSuccessful"  class="text-right formField">
+                 <span style="color: #2ca02c; margine-left:5%"><b>User Assessment Saved Successfully.</b></span>
+             </div> <div>&nbsp;</div>
+         </div>
+         
+         <div ng-if="!showMess" class="text-right">
+             <div class="form-group">
+                <span class="" ng-class="{hidden: getCurrentStepIndex()!=0};">
+                    <button type="button" class="addBtnQuestion" ng-click="selectApplication()">Change Application</button>
+                </span>
+                <span ng-class="{hidden: !hasPreviousStep()};">
+                    <button  type="button" class="addBtnQuestion" ng-click="decrementStep()">Back</button>
+                </span>
+                <span ng-class="{hidden: !hasNextStep()}">
+                    <button   type="button" class="addBtnQuestion" ng-click="incrementStep();resetPage()">Next Step</button>
+                </span>
+                <span ng-class="{hidden: hasNextStep()}">
+                    <button type="button" ng-show="!selectApplicationView" class="addBtnQuestion" ng-click="incrementStep();submitAssessment(assessmentQuestionnaireList,currentApp)">Submit</button>
+                </span>
+             </div>
+        </div>     
+    
+    </div>
+    
+   
+<!--MODAL POPUP for APPLICATION SEARCH-->    
+<div class="modal fade" id="applicationModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div  class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <span class="modal-title headingModalTitle">Select Application</span>
+      </div>
+      <div class="modal-body">
+          <div class="input-group searchBoxModal">
+              <input type="text" class="form-control inputSearch" ng-model="searchApplication" placeholder="Search Application">
+              <span class="searchFont">
+                  <span class=" glyphicon glyphicon-search searchIcon"></span>
+              </span>
+          </div>
+
+          <div class="row" ng-repeat="application in applicationList | filter:searchApplication">
+              <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 text-right">
+                  <input type="radio" ng-model="$parent.currentApp"  value="{{application.applicationId}}">
+              </div>
+              <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10 whiteSpaceNoWrap">
+                  <label class="modalPopUp1TdStyle font-size16"  >{{application.applicationName}}</label>
+              </div>
+          </div>
+      </div>
+      <div class="modal-footer">
+          <div class="row">
+              <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                  <button  ng-click="showSelectedApplication(currentApp,applicationList)" class="addBtnModal btn" data-dismiss="modal"
+                          ng-disabled="!currentApp">
+                      Apply
+                  </button>
+              </div>
+              <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                  <button type="button" class="addBtnModal" data-dismiss="modal">Cancel</button>
+              </div>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>    
+     
+</div>
+<!-- *** FOOTER *** -->
+<div footer></div> 
+</div>

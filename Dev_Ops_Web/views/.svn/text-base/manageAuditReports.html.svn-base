@@ -1,0 +1,41 @@
+<div ng-controller="manageAuditReportsCtrl" ng-cloak ng-init="init()">
+     <div header></div>
+     <div id="mainDiv" class="container mainContainer">
+            <div class="headingTitle">Manage Audit Reports</div>
+        <div class="well wellClass">
+                <div class="titleHeading">Report Settings</div>
+            <div class="containerBody">
+                <div class="searchBox">
+                    <div class="inner-addon right-addon">
+                        <i class="glyphicon glyphicon-search"></i>
+                        <input type="text" class="form-control textBox" ng-model="accountReport" placeholder="Search Reports">
+                    </div>
+                </div>
+	            <div class="containerBody notificationContent">
+	                <div>
+	                    <table class="table table-bordered manageReportTbl" cellspacing="0">
+	                        <tr class="blue-bg">
+	                            <th class="white bold text-center">Account</th>
+	                            <th class="white bold text-center">Business Unit</th>
+	                            <th class="white bold text-center">Business Need</th>
+	                            <th class="white bold text-center">Business & Env Complexity</th>
+	                            <th class="white bold text-center">Delivery Maturity</th>
+	                        </tr>
+	                        <tr class="text-center" dir-paginate="reportData in accountReportsList  |  filter : accountReport | unique : 'businessUnitName'| itemsPerPage:5">
+	                            <td >{{ reportData.accountName }} </td>
+	                            <td >{{ reportData.businessUnitName }} </td>
+	                            <td><switch ng-change="updateReportData(reportData,reportData.businessNeedActive,1)"      ng-model="reportData.businessNeedActive"     ></switch></td>
+	                            <td><switch ng-change="updateReportData(reportData,reportData.businessEnvNeedActive,2)"   ng-model="reportData.businessEnvNeedActive"  ></switch></td>
+	                            <td><switch ng-change="updateReportData(reportData,reportData.deliveryMaturityActive,3)"  ng-model="reportData.deliveryMaturityActive" ></switch></td>
+	                        </tr>
+	                    </table>
+	                    <div class="text-center">
+	                        <dir-pagination-controls max-size="5" direction-links="true" boundary-links="true"></dir-pagination-controls>
+	                    </div>
+	                </div>
+	            </div>
+        	</div>
+    	</div>
+	</div>
+    <div footer></div>
+</div>
